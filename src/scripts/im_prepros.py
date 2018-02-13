@@ -56,7 +56,7 @@ def image_callback(ros_data):
 	# Print stats ----------------------------------------------------------
 	e2 = cv2.getTickCount()
 	t = (e2 - e1)/cv2.getTickFrequency()
-	print('frame time:'+str(t)+'----------------------------block end')
+	#print('frame time:'+str(t)+'----------------------------block end')
 	
 	count+=1
 	if count==25:
