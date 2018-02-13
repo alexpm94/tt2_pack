@@ -47,16 +47,16 @@ def image_callback(ros_data):
 	dst=np.hstack((color,equ,cl1))
 
 	# Compress image to pub ------------------------------------------------
-        cropImage = CompressedImage()
-        cropImage.header.stamp = rospy.Time.now()
-        cropImage.format = "jpeg"
-        cropImage.data = np.array(cv2.imencode('.jpg',dst)[1]).tostring()
-        pub.publish(cropImage)
+	cropImage = CompressedImage()
+	cropImage.header.stamp = rospy.Time.now()
+	cropImage.format = "jpeg"
+	cropImage.data = np.array(cv2.imencode('.jpg',dst)[1]).tostring()
+	pub.publish(cropImage)
 
 	# Print stats ----------------------------------------------------------
-	e2 = cv2.getTickCount()	
-    	t = (e2 - e1)/cv2.getTickFrequency()
-    	#print('frame time:'+str(t)+'----------------------------block end')
+	e2 = cv2.getTickCount()
+	t = (e2 - e1)/cv2.getTickFrequency()
+	#print('frame time:'+str(t)+'----------------------------block end')
 	
 	count+=1
 	if count==25:
