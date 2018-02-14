@@ -38,7 +38,7 @@ def image_callback(ros_data):
     	# 2. Color transform ---------------------------------------------
     	color = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     	# 3. Histogram Calculation ---------------------------------------
-    	clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(18,18))
+    	clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(8,8))
     	cl1 = clahe.apply(color)
     	equ = cv2.equalizeHist(color)
     	#Union of the 3 images
