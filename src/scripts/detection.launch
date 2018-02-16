@@ -1,4 +1,6 @@
 <launch>
-  <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(find tt_pack)/src/bags/dani.bag"/>
-  <node pkg="rviz" type="rviz" name="holi"/>
+  <param name="haar" value="$(find tt_pack)/src/scripts/haarcascade_frontalface_default.xml" />
+  <node pkg="rosbag" type="play" name="player" output="screen" args="-l $(find tt_pack)/src/bags/dani.bag"/>
+  <node pkg="rviz" type="rviz" name="Holi" required="true"/>
+  <node pkg="tt_pack" type="im_clahe.py" name="im_prepros_c" />
 </launch>

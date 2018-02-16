@@ -10,12 +10,15 @@ import numpy as np
 import time
 import math
 from numpy import *
+import os.path
 
 #Constants
-face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+face_cascade = cv2.CascadeClassifier(rospy.get_param('haar'))
 bridge = CvBridge()
     
 def image_callback(ros_data):
+
     try:
         np_arr = np.fromstring(ros_data.data, np.uint8)
         cv2_img = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR)
@@ -29,7 +32,7 @@ def image_callback(ros_data):
         e1 = cv2.getTickCount()
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+w+20, x:x+w]
+            roi_gray = gray[y:y+h, x:x+w]
         imF=cv2.resize(roi_gray,(150,150))
         e2 = cv2.getTickCount()
         t = (e2 - e1)/cv2.getTickFrequency()
@@ -50,9 +53,7 @@ def image_callback(ros_data):
     print('frame time:'+str(t)+'-------------------------------block end')
 
 def main():
-
     global pub
-
     rospy.init_node('im_prepros_c')
     image_topic = "/im_prepros/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
