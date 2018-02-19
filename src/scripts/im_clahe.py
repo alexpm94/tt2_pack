@@ -21,7 +21,7 @@ def image_callback(ros_data):
 
     try:
         np_arr = np.fromstring(ros_data.data, np.uint8)
-        cv2_img = cv2.imdecode(np_arr, cv2.CV_LOAD_IMAGE_COLOR)
+        cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
     except CvBridgeError, e:
         print(e)
