@@ -43,7 +43,7 @@ def image_callback(ros_data):
     	equ = cv2.equalizeHist(color)
     	#Union of the 3 images
     	dst=np.hstack((color,equ,cl1))
-
+#COMENTARIO
     	# Compress image to pub ------------------------------------------------
     	cropImage = CompressedImage()
     	cropImage.header.stamp = rospy.Time.now()
