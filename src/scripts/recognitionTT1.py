@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import logging
 import pylab as pl
+import pickle
 
 #Leer el archivo csv
 CSV_PATH=os.getcwd().replace('scripts','dataBase/new_csv.csv')
@@ -63,7 +64,6 @@ print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.
 t0 = time()
 pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
 print "done in %0.3fs" % (time() - t0)
-
 eigenfaces = pca.components_.reshape((n_components, h, w))
 ei_mean = pca.mean_.reshape(h,w)
 
@@ -78,7 +78,7 @@ var=pca.explained_variance_ratio_
 first_pc=pca.components_[0]
 second_pc=pca.components_[1]
 
-print var, sum(var), eigenfaces.shape, ei_mean.shape, X_train_pca.shape
+#print var, sum(var), eigenfaces.shape, ei_mean.shape, X_train_pca.shape
 
 ###############################################################################
 # Train a SVM classification model
@@ -99,14 +99,16 @@ print clf.best_estimator_
 
 ###############################################################################
 # Quantitative evaluation of the model quality on the test set
-
 print "Predicting the people names on the testing set"
 t0 = time()
 y_pred = clf.predict(X_test_pca)
 print "done in %0.3fs" % (time() - t0)
-
 print classification_report(y_test, y_pred, target_names=target_names)
 print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+
+#Guardar Variables del modelo ya entrenado
+with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
+    pickle.dump([clf, X_test_pca, y_test,target_names,n_classes], f)
 
 
 ###############################################################################
