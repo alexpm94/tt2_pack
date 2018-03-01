@@ -28,7 +28,9 @@ def image_callback(ros_data):
     else:
 
         image1 = np.asarray(cv2_img) # 480x640x3
-        gray = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
+        cv2.rectangle(image1,(220,140),(420,340),(0,0,255),4)
+        image = image1[140:340,220:420]
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         e1 = cv2.getTickCount()
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x,y,w,h) in faces:
@@ -44,22 +46,35 @@ def image_callback(ros_data):
             cl1 = clahe.apply(imF)
             # Print stats ----------------------------------------------------------
             print('frame time:'+str(t)+'-------------------------------block end')
-
             # Compress image to pub ------------------------------------------------
             cropImage = CompressedImage()
             cropImage.header.stamp = rospy.Time.now()
             cropImage.format = "jpeg"
             cropImage.data = np.array(cv2.imencode('.jpg',cl1)[1]).tostring()
             pub.publish(cropImage)
+
         except UnboundLocalError:
-                print 'NO HAY ROSTRO EN LA IMAGEN', len(faces)
+            print 'NO HAY ROSTRO EN LA IMAGEN', len(faces)
+            #pub.publish(None)
+        finally:
+            #Crear compressed image de la imagen con el recuadro
+            img_rec = CompressedImage()
+            img_rec.header.stamp = rospy.Time.now()
+            img_rec.format = "jpeg"
+            img_rec.data = np.array(cv2.imencode('.jpg',image1)[1]).tostring()
+            pub2.publish(img_rec)
+
+
 
 def main():
     global pub
+    global pub2
     rospy.init_node('im_prepros_c')
     image_topic = "/im_prepros/compressed"
-    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
-    pub = rospy.Publisher('/im_prepros_AI/compressed', CompressedImage, queue_size=1)
+    image_topic_camera='/usb_cam/image_raw/compressed'
+    rospy.Subscriber(image_topic_camera, CompressedImage, image_callback,queue_size=1)
+    pub = rospy.Publisher('/Clahe/compressed', CompressedImage, queue_size=1)
+    pub2 = rospy.Publisher('/Recuadro/compressed', CompressedImage, queue_size=1)
 
     rospy.spin()
 
