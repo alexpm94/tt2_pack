@@ -16,6 +16,17 @@ import os.path
 
 face_cascade = cv2.CascadeClassifier(rospy.get_param('haar'))
 bridge = CvBridge()
+
+def create_CI(image):
+	'''
+	This function creates a Compressed image object and it sets
+	its parameters, it needs as argument the name of the image.
+	'''
+	msg = CompressedImage()
+	msg.header.stamp = rospy.Time.now()
+	msg.format = "jpeg"
+	msg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
+	return msg
     
 def image_callback(ros_data):
 
@@ -47,10 +58,7 @@ def image_callback(ros_data):
             # Print stats ----------------------------------------------------------
             print('frame time:'+str(t)+'-------------------------------block end')
             # Compress image to pub ------------------------------------------------
-            cropImage = CompressedImage()
-            cropImage.header.stamp = rospy.Time.now()
-            cropImage.format = "jpeg"
-            cropImage.data = np.array(cv2.imencode('.jpg',cl1)[1]).tostring()
+            cropImage = create_CI(cl1)
             pub.publish(cropImage)
 
         except UnboundLocalError:
@@ -58,10 +66,7 @@ def image_callback(ros_data):
             #pub.publish(None)
         finally:
             #Crear compressed image de la imagen con el recuadro
-            img_rec = CompressedImage()
-            img_rec.header.stamp = rospy.Time.now()
-            img_rec.format = "jpeg"
-            img_rec.data = np.array(cv2.imencode('.jpg',image1)[1]).tostring()
+            img_rec = create_CI(image1)
             pub2.publish(img_rec)
 
 
