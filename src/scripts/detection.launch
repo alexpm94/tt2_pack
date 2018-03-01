@@ -1,6 +1,14 @@
 <launch>
-  <param name="haar" value="$(find tt2_pack)/src/scripts/haarcascade_frontalface_default.xml" />
   <node pkg="rosbag" type="play" name="player" output="screen" args="-l $(find tt2_pack)/src/bags/dani.bag"/>
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
   <node pkg="rviz" type="rviz" name="Holi" required="true"/>
-  <node pkg="tt2_pack" type="im_clahe.py" name="im_prepros_c" />
+  <param name="haar" value="$(find tt2_pack)/src/scripts/haarcascade_frontalface_default.xml" />
+  <node pkg="tt2_pack" type="im_clahe.py" name="im_prepros_c"/>
 </launch>
