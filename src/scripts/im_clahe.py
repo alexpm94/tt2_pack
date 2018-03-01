@@ -33,24 +33,26 @@ def image_callback(ros_data):
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x,y,w,h) in faces:
             roi_gray = gray[y:y+h, x:x+w]
-        imF=cv2.resize(roi_gray,(150,150))
-        e2 = cv2.getTickCount()
-        t = (e2 - e1)/cv2.getTickFrequency()
-        # Image pre-processing function begins
-        # 3. Histogram Calculation ---------------------------------------
-        clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(8,8))
-        cl1 = clahe.apply(imF)
+        try:
+            pass
+            imF=cv2.resize(roi_gray,(150,150))
+            e2 = cv2.getTickCount()
+            t = (e2 - e1)/cv2.getTickFrequency()
+            # Image pre-processing function begins
+            # 3. Histogram Calculation ---------------------------------------
+            clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(8,8))
+            cl1 = clahe.apply(imF)
+            # Print stats ----------------------------------------------------------
+            print('frame time:'+str(t)+'-------------------------------block end')
 
-    # Compress image to pub ------------------------------------------------
-        cropImage = CompressedImage()
-        cropImage.header.stamp = rospy.Time.now()
-        cropImage.format = "jpeg"
-        cropImage.data = np.array(cv2.imencode('.jpg',cl1)[1]).tostring()
-        pub.publish(cropImage)
-
-    # Print stats ---------------------------------------------------------- 
-            
-    print('frame time:'+str(t)+'-------------------------------block end')
+            # Compress image to pub ------------------------------------------------
+            cropImage = CompressedImage()
+            cropImage.header.stamp = rospy.Time.now()
+            cropImage.format = "jpeg"
+            cropImage.data = np.array(cv2.imencode('.jpg',cl1)[1]).tostring()
+            pub.publish(cropImage)
+        except UnboundLocalError:
+                print 'NO HAY ROSTRO EN LA IMAGEN', len(faces)
 
 def main():
     global pub
