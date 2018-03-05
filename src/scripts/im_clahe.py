@@ -4,6 +4,7 @@
 import rospy
 from sensor_msgs.msg import CompressedImage
 from sensor_msgs.msg import Image
+from std_msgs.msg import String
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
 import numpy as np
@@ -56,14 +57,16 @@ def image_callback(ros_data):
             clahe = cv2.createCLAHE(clipLimit=5, tileGridSize=(8,8))
             cl1 = clahe.apply(imF)
             # Print stats ----------------------------------------------------------
-            print('frame time:'+str(t)+'-------------------------------block end')
+            #print('frame time:'+str(t)+'-------------------------------block end')
+            faces_str='ROSTRO PRESENTE'
             # Compress image to pub ------------------------------------------------
             cropImage = create_CI(cl1)
             pub.publish(cropImage)
+            pub3.publish(faces_str)
 
         except UnboundLocalError:
-            print 'NO HAY ROSTRO EN LA IMAGEN', len(faces)
-            #pub.publish(None)
+            faces_str='NO HAY ROSTRO'
+            pub3.publish(faces_str)
         finally:
             #Crear compressed image de la imagen con el recuadro
             img_rec = create_CI(image1)
@@ -74,12 +77,14 @@ def image_callback(ros_data):
 def main():
     global pub
     global pub2
+    global pub3
     rospy.init_node('im_prepros_c')
     image_topic = "/im_prepros/compressed"
     image_topic_camera='/usb_cam/image_raw/compressed'
     rospy.Subscriber(image_topic_camera, CompressedImage, image_callback,queue_size=1)
     pub = rospy.Publisher('/Clahe/compressed', CompressedImage, queue_size=1)
     pub2 = rospy.Publisher('/Recuadro/compressed', CompressedImage, queue_size=1)
+    pub3 = rospy.Publisher('faces_founded', String, queue_size=10)
 
     rospy.spin()
 
