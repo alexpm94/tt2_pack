@@ -1,5 +1,7 @@
 <launch>
-  <node pkg="rosbag" type="play" name="player" output="screen" args="-l $(find tt2_pack)/src/bags/dani.bag"/>
+  <!-- NODO PARA CORRER LA BOLSA-->
+  <!--node pkg="rosbag" type="play" name="player" output="screen" args="-l $(find tt2_pack)/src/bags/dani.bag"/ -->
+  <!-- NODO PARA ABRIR LA CAMARA-->
   <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
     <param name="video_device" value="/dev/video0" />
     <param name="image_width" value="640" />
@@ -8,7 +10,10 @@
     <param name="camera_frame_id" value="usb_cam" />
     <param name="io_method" value="mmap"/>
   </node>
+  <!-- NODO PARA ABRIR RVIZ-->
   <node pkg="rviz" type="rviz" name="Holi" required="true"/>
-  <param name="haar" value="$(find tt2_pack)/src/scripts/haarcascade_frontalface_default.xml" />
+  <param name="haar" value="$(find tt2_pack)/include/haarcascade_frontalface_default.xml" />
+  <param name="path_user" type="str" value="$(find tt2_pack)/include/s12" />
+  <param name="Clasificador" value="$(find tt2_pack)/include/Clasificador.pkl" />
   <node pkg="tt2_pack" type="im_clahe.py" name="im_prepros_c"/>
 </launch>
