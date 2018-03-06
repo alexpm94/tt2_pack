@@ -4,6 +4,7 @@
 import rospy
 from sensor_msgs.msg import CompressedImage
 from sensor_msgs.msg import Image
+from std_msgs.msg import Bool
 from std_msgs.msg import String
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
@@ -65,6 +66,8 @@ def image_callback(ros_data):
             faces_str='ROSTRO DTECTADO'
             if contador<10:
                 user_images(path_user,contador,cl1)
+            elif contador==11:
+                pub4.publish(True)
             contador+=1
             # Compress image to pub ------------------------------------------------
             cropImage = create_CI(cl1)
@@ -75,6 +78,8 @@ def image_callback(ros_data):
             faces_str='NO HAY ROSTRO'
             contador=0
             pub3.publish(faces_str)
+            pub4.publish(False)
+
         finally:
             #Crear compressed image de la imagen con el recuadro
             img_rec = create_CI(image1)
@@ -86,6 +91,7 @@ def main():
     global pub
     global pub2
     global pub3
+    global pub4
     global contador
     contador=0
     rospy.init_node('im_prepros_c')
@@ -95,6 +101,7 @@ def main():
     pub = rospy.Publisher('/Clahe/compressed', CompressedImage, queue_size=1)
     pub2 = rospy.Publisher('/Recuadro/compressed', CompressedImage, queue_size=1)
     pub3 = rospy.Publisher('faces_founded', String, queue_size=10)
+    pub4 = rospy.Publisher('user_images', Bool, queue_size=1)
 
     rospy.spin()
 
