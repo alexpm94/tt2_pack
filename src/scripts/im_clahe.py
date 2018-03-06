@@ -16,7 +16,11 @@ import os.path
 #Constants
 
 face_cascade = cv2.CascadeClassifier(rospy.get_param('haar'))
+path_user=rospy.get_param('path_user')
 bridge = CvBridge()
+
+def user_images(path,cont,image):
+    cv2.imwrite((path+"/%d.png") % cont, image)
 
 def create_CI(image):
 	'''
@@ -30,26 +34,26 @@ def create_CI(image):
 	return msg
     
 def image_callback(ros_data):
-
+    global contador
     try:
         np_arr = np.fromstring(ros_data.data, np.uint8)
         cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
     except CvBridgeError, e:
         print(e)
-    else:
+    else:#La linea else se ejecuta cuanto no hay exceptions
 
         image1 = np.asarray(cv2_img) # 480x640x3
-        cv2.rectangle(image1,(220,140),(420,340),(0,0,255),4)
-        image = image1[140:340,220:420]
+        cv2.rectangle(image1,(180,100),(480,380),(0,0,255),4)
+        image = image1[100:380,180:480]
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         e1 = cv2.getTickCount()
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+h, x:x+w]
+            roi_gray = gray[y:y+h+5, x+5:x+w-10]
         try:
             pass
-            imF=cv2.resize(roi_gray,(150,150))
+            imF=cv2.resize(roi_gray,(140,160))
             e2 = cv2.getTickCount()
             t = (e2 - e1)/cv2.getTickFrequency()
             # Image pre-processing function begins
@@ -58,7 +62,10 @@ def image_callback(ros_data):
             cl1 = clahe.apply(imF)
             # Print stats ----------------------------------------------------------
             #print('frame time:'+str(t)+'-------------------------------block end')
-            faces_str='ROSTRO PRESENTE'
+            faces_str='ROSTRO DTECTADO'
+            if contador<10:
+                user_images(path_user,contador,cl1)
+            contador+=1
             # Compress image to pub ------------------------------------------------
             cropImage = create_CI(cl1)
             pub.publish(cropImage)
@@ -66,6 +73,7 @@ def image_callback(ros_data):
 
         except UnboundLocalError:
             faces_str='NO HAY ROSTRO'
+            contador=0
             pub3.publish(faces_str)
         finally:
             #Crear compressed image de la imagen con el recuadro
@@ -78,6 +86,8 @@ def main():
     global pub
     global pub2
     global pub3
+    global contador
+    contador=0
     rospy.init_node('im_prepros_c')
     image_topic = "/im_prepros/compressed"
     image_topic_camera='/usb_cam/image_raw/compressed'
