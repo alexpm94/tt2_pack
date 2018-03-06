@@ -51,7 +51,7 @@ print "n_caracteristicas: %d" % n_features
 print "n_clases: %d" % n_classes
 
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=20)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
 print X_test.shape, X_train.shape
 
 ###############################################################################
@@ -108,7 +108,7 @@ print confusion_matrix(y_test, y_pred, labels=range(n_classes))
 
 #Guardar Variables del modelo ya entrenado
 with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
-    pickle.dump([clf, X_test_pca, y_test,target_names,n_classes], f)
+    pickle.dump([pca,clf, X_test_pca, y_test,target_names,n_classes], f)
 
 
 ###############################################################################
