@@ -14,6 +14,6 @@
   <node pkg="rviz" type="rviz" name="Holi" required="true"/>
   <param name="haar" value="$(find tt2_pack)/include/haarcascade_frontalface_default.xml" />
   <param name="path_user" type="str" value="$(find tt2_pack)/include/s12" />
-  <param name="Clasificador" value="$(find tt2_pack)/include/Clasificador.pkl" />
+  <param name="Clasificador" value="$(find tt2_pack)/src/scripts/Clasificador.pkl" />
   <node pkg="tt2_pack" type="im_clahe.py" name="im_prepros_c"/>
 </launch>
