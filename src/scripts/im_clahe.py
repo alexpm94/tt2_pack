@@ -51,7 +51,7 @@ def image_callback(ros_data):
         e1 = cv2.getTickCount()
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
         for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+h+5, x+5:x+w-10]
+            roi_gray = gray[y:y+h+15, x+20:x+w-20]
         try:
             pass
             imF=cv2.resize(roi_gray,(140,160))
