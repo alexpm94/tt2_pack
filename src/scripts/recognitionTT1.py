@@ -90,7 +90,7 @@ param_grid = {
           }
 # for sklearn version 0.16 or prior, the class_weight parameter value is 'auto'
 #Grid encuantra el mejor parametro de C y gamma pa ser utilizado con el kernel rbf
-clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced',probability=True), param_grid)
 clf = clf.fit(X_train_pca, y_train)
 print "done in %0.3fs" % (time() - t0)
 print "Best estimator found by grid search:"
@@ -102,9 +102,10 @@ print clf.best_estimator_
 print "Predicting the people names on the testing set"
 t0 = time()
 y_pred = clf.predict(X_test_pca)
+y_proba=clf. predict_proba(X_test_pca)
 print "done in %0.3fs" % (time() - t0)
-print classification_report(y_test, y_pred, target_names=target_names)
-print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+#print classification_report(y_test, y_pred, target_names=target_names)
+#print confusion_matrix(y_test, y_pred, labels=range(n_classes))
 
 #Guardar Variables del modelo ya entrenado
 with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
@@ -136,11 +137,11 @@ def title(y_pred, y_test, target_names, i):
 prediction_titles = [title(y_pred, y_test, target_names, i)
                          for i in range(y_pred.shape[0])]
 
-plot_gallery(X_test, prediction_titles, h, w)
+#plot_gallery(X_test, prediction_titles, h, w)
 
 # plot the gallery of the most significative eigenfaces
 
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
-plot_gallery(eigenfaces, eigenface_titles, h, w)
+#plot_gallery(eigenfaces, eigenface_titles, h, w)
 
 pl.show()
