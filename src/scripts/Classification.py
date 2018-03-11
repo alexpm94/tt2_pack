@@ -68,13 +68,12 @@ def user_recognized(Base_path,classifier):
 	y_final=map(lambda x,y:x*y, y_pred, y_rounded)
 	# Obtener la clase mas repetida
 	freq_dic=getFrequencyDict(y_final)
-	if freq_dic.keys()[0]<0:
+	user_detected=keywithmaxval(freq_dic)
+	if user_detected<0:
 		return 'NO USER IN THE DATA BASE'
-	return target_names[keywithmaxval(freq_dic)]
+	return target_names[user_detected]
 
-'''
 #Path de las imagenes
 Base_path=os.getcwd().replace('src/scripts','include/s12')
 classifier='Clasificador.pkl'
 print user_recognized(Base_path,classifier)
-'''
