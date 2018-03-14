@@ -21,8 +21,9 @@ bridge = CvBridge()
 
     
     
+    
 def image_callback(data):   
-        
+     
         #Prara usar Bolsas
         #np_arr = np.fromstring(ros_data.data, np.uint8)
         #cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
@@ -35,20 +36,16 @@ def image_callback(data):
     imgtk = ImageTk.PhotoImage(image=img)
     lmain.imgtk = imgtk
     lmain.configure(image=imgtk)
-    
-    
+    lmain.image=imgtk
+        
   
 
 def listener():
+    global lmain
     rospy.init_node('im_prepros_c',anonymous=True)
     image_topic = "/usb_cam/image_raw/"
     rospy.Subscriber(image_topic, ImageMsg, image_callback,queue_size=1)
      # spin() simply keeps python from exiting until this node is stopped
-    mainloop()
-
-if __name__ == '__main__':
-    #global lmain
-    global imgtk
     root = Tk()
     root.bind('<Escape>', lambda e: root.quit())
     frame1=Frame(root)
@@ -57,6 +54,12 @@ if __name__ == '__main__':
     lmain.pack()
     quitButton=Button(root, text="Quit", command=root.quit)
     quitButton.pack()
+    mainloop()
+
+if __name__ == '__main__':
+    global lmain
+    global imgtk
+   
 
     listener()
     
