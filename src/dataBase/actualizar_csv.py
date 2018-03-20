@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     BASE_PATH=os.getcwd()
     SEPARATOR=","
-    names={'s1':'Balam','s2':'Alex','s3':'Brenda','s4':'Dani','s5':'Fortanel','s6':'Hector','s7':'Marvin','s8':'Lalo','s9':'Popoca','s10':'Rosey','s11':'Alex2','s12':'DANI2'}
+    names={'s1':'Balam','s2':'Alex','s3':'Brenda','s4':'Dani','s5':'Fortanel','s6':'Hector','s7':'Marvin','s8':'Lalo','s9':'Popoca','s10':'Rosey','s11':'Alex2'}
 
     label = 0
     for dirname, dirnames, filenames in os.walk(BASE_PATH):
