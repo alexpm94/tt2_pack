@@ -11,7 +11,7 @@
     <param name="io_method" value="mmap"/>
   </node>
   <!-- NODO PARA ABRIR RVIZ-->
-  <node pkg="rviz" type="rviz" name="Holi" required="true"/>
+  <!-- node pkg="rviz" type="rviz" name="Holi" required="true"/ -->
   <param name="haar" value="$(find tt2_pack)/include/haarcascade_frontalface_default.xml" />
   <param name="path_user" type="str" value="$(find tt2_pack)/include/s12" />
   <param name="Clasificador" value="$(find tt2_pack)/src/scripts/Clasificador.pkl" />
