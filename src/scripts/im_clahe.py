@@ -17,6 +17,7 @@ import os.path
 #Constants
 
 face_cascade = cv2.CascadeClassifier(rospy.get_param('haar'))
+blink_cascade = cv2.CascadeClassifier(rospy.get_param('blinkhaar'))
 path_user=rospy.get_param('path_user')
 bridge = CvBridge()
 
@@ -36,10 +37,16 @@ def create_CI(image):
     
 def image_callback(ros_data):
     global contador
+    global cont_blink
+    global pub
+    global pub2
+    global pub3
+    global pub4
+    global pub5
+    
     try:
         np_arr = np.fromstring(ros_data.data, np.uint8)
         cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-
     except CvBridgeError, e:
         print(e)
     else:#La linea else se ejecuta cuanto no hay exceptions
@@ -47,11 +54,31 @@ def image_callback(ros_data):
         image1 = np.asarray(cv2_img) # 480x640x3
         cv2.rectangle(image1,(180,100),(480,380),(0,0,255),4)
         image = image1[100:380,180:480]
+        
+        #cv2.imshow(image1)
+        #print(cv2_img)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         e1 = cv2.getTickCount()
-        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        faces = face_cascade.detectMultiScale(gray,
+        scaleFactor=1.3,
+        minNeighbors=5,
+        minSize=(160, 160),
+        maxSize=(450, 450)
+        )
+        blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.4,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
+        #el valor de escala original era 1.2, con 
         for (x,y,w,h) in faces:
             roi_gray = gray[y:y+h+15, x+20:x+w-20]
+
+        if len(blink)==2:
+            for (x,y,w,h) in blink:
+                cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),3)
+                cont_blink+=1
+                if cont_blink==1:
+                    pub5.publish(True);
+                    print('Blink')
+                
+        
         try:
             pass
             imF=cv2.resize(roi_gray,(140,160))
@@ -71,14 +98,17 @@ def image_callback(ros_data):
             contador+=1
             # Compress image to pub ------------------------------------------------
             cropImage = create_CI(cl1)
+            #pub5.publish = create_CI(roi_color)
             pub.publish(cropImage)
             pub3.publish(faces_str)
 
         except UnboundLocalError:
             faces_str='NO HAY ROSTRO'
             contador=0
+            cont_blink=0;
             pub3.publish(faces_str)
             pub4.publish(False)
+            pub5.publish(False)
 
         finally:
             #Crear compressed image de la imagen con el recuadro
@@ -92,6 +122,7 @@ def main():
     global pub2
     global pub3
     global pub4
+    global pub5
     global contador
     contador=0
     rospy.init_node('im_prepros_c')
@@ -102,7 +133,8 @@ def main():
     pub2 = rospy.Publisher('/Recuadro/compressed', CompressedImage, queue_size=1)
     pub3 = rospy.Publisher('faces_founded', String, queue_size=10)
     pub4 = rospy.Publisher('user_images', Bool, queue_size=1)
-
+    pub5 = rospy.Publisher('Blink_detected',Bool,queue_size=1)
+    #blink_detected
     rospy.spin()
 
 if __name__ == '__main__':
