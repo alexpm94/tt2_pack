@@ -104,18 +104,19 @@ t0 = time()
 y_pred = clf.predict(X_test_pca)
 y_proba=clf. predict_proba(X_test_pca)
 print "done in %0.3fs" % (time() - t0)
-#print classification_report(y_test, y_pred, target_names=target_names)
-#print confusion_matrix(y_test, y_pred, labels=range(n_classes))
 
 #Guardar Variables del modelo ya entrenado
 with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
     pickle.dump([pca,clf, X_test_pca, y_test,target_names,n_classes], f)
 
 
+print classification_report(y_test, y_pred, target_names=target_names)
+print confusion_matrix(y_test, y_pred, labels=range(n_classes))
+
 ###############################################################################
 # Qualitative evaluation of the predictions using matplotlib
 
-def plot_gallery(images, titles, h, w, n_row=4, n_col=5):
+def plot_gallery(images, titles, h, w, n_row=4, n_col=4):
     """Helper function to plot a gallery of portraits"""
     pl.figure(figsize=(1.8 * n_col, 2.4 * n_row))
     pl.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
@@ -131,17 +132,18 @@ def plot_gallery(images, titles, h, w, n_row=4, n_col=5):
 
 def title(y_pred, y_test, target_names, i):
     pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
+    print i
     true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
     return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
 
 prediction_titles = [title(y_pred, y_test, target_names, i)
                          for i in range(y_pred.shape[0])]
 
-#plot_gallery(X_test, prediction_titles, h, w)
+plot_gallery(X_test, prediction_titles, h, w)
 
 # plot the gallery of the most significative eigenfaces
 
 eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
-#plot_gallery(eigenfaces, eigenface_titles, h, w)
+plot_gallery(eigenfaces, eigenface_titles, h, w)
 
 pl.show()
