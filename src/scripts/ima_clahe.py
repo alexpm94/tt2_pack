@@ -76,7 +76,7 @@ def image_callback(ros_data):
             maxSize=(450, 450)
             )
 
-            blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.3,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
+            blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.5,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
             #el valor de escala original era 1.2, con 
 
             for (x,y,w,h) in faces:
@@ -140,7 +140,7 @@ def main():
     global cont_blink
     global distance
     global dist_min
-    dist_min=20
+    dist_min=30
     distance=0
     contador=0
     rospy.init_node('im_prepros_c')
