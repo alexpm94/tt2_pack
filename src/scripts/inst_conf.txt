@@ -43,3 +43,27 @@ sudo apt-get install python-rospy
 
 install image transport plugins
 sudo apt-get install ros-kinetic-image-transport-plugins
+
+ARDUINO
+download arduino and extract package
+https://www.arduino.cc/en/Guide/Linux
+
+open a Terminal window and move into the arduino-1.8.x folder. Type the command ./install.sh and wait for the process to finish. You should find a new icon on your desktop. 
+
+Open Terminal and type:
+ls -l /dev/ttyACM* or ls -l /dev/ttyUSB* dependig of device
+you will get something like
+sudo usermod -a -G dialout <username>    
+
+ROS_SERIAL
+sudo apt-get install ros-indigo-rosserial-arduino
+sudo apt-get install ros-indigo-rosserial
+ cd catkin_ws/src
+  git clone https://github.com/ros-drivers/rosserial.git
+  cd catkin_ws
+  catkin_make
+  
+install ross_lib
+  cd <sketchbook>/libraries
+  rm -rf ros_lib
+  rosrun rosserial_arduino make_libraries.py 
