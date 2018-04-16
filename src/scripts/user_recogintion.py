@@ -28,19 +28,24 @@ def image_callback(ros_data):
         if state_current:
             #print 'Imges Completed'
             print 'Welcome Sir '+Classification.user_recognized(path_user,path_classifier)
+            publica.publish(True)
         else:
             print 'No user user detected'
+            publica.publish(False)
     state_prev=ros_data.data
 
 def main():
     global state_current
     global state_prev
+    global publica
     state_prev=True
     state_current=False
     rospy.init_node('recognition_node')
     image_topic = '/user_images'
     rospy.Subscriber(image_topic, Bool, image_callback,queue_size=1)
-    #recognition = rospy.Publisher('/user_name', String, queue_size=10)
+    recognition = rospy.Publisher('/user_name', String, queue_size=10)
+    publica = rospy.Publisher('User_detection',Bool,queue_size=1)
+   
     rospy.spin()
 
 if __name__ == '__main__':
