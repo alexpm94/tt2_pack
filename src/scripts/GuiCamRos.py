@@ -49,41 +49,52 @@ def main():
     global lfaces
     global root
 
-    rospy.init_node('im_prepros_c',anonymous=True)
     
-    image_topic = "/Recuadro/compressed"
-    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
-    faces_topic = "/faces_founded"
-    rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
      # spin() simply keeps python from exiting until this node is stopped
     root = Tk()
     #root.attributes("-fullscreen", True)
     #Specific Size
-    #root.geometry("720x500")
+    root.geometry("1000x500")
     #Full view Size
     #root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
     #root.bind('<Escape>', lambda e: root.attributes("-fullscreen", True))
-    frame1=Frame(root)
-    frame1.pack(side=RIGHT)
+    frame1=Frame(root, width = 700, height=500, background="blue")
+    frame1.pack(side=RIGHT,fill=BOTH,expand=1)
+    
+    frameControls=Frame(root, width = 300, height=500, background="green")
+    frameControls.pack(fill=BOTH, expand=1)
+    
     lmain = Label(frame1)
     lmain.pack(side=TOP)
     lfaces=Label(frame1)
     lfaces.pack(side = BOTTOM)
     root.bind('<Escape>', lambda e: root.quit())
-    quitButton=Button(root, text="Quit", command=quit)
+    quitButton=Button(frameControls, text="Quit", command=quit)
     quitButton.pack(side = BOTTOM)
+    reconocerButton=Button(frameControls, text="Reconocer", command=launch)
+    reconocerButton.pack(side=RIGHT)
+    AddUserButton=Button(frameControls, text="Agregar Usuario")
+    trainButton=Button(frameControls,text="Entrenar")
+    AddUserButton.pack(side=LEFT)
+    trainButton.pack(side=LEFT)
+
     mainloop()
 
 def launch():
     global launch
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
-    launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/eduardo/catkin_ws/src/tt2_pack/src/scripts/detection.launch"])
+    launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/eduardocg/catkin_ws/src/tt2_pack/src/scripts/detection.launch"])
 
     launch.start()
-    main()
+    rospy.init_node('gui',anonymous=True)
+    
+    image_topic = "/Recuadro/compressed"
+    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
+    faces_topic = "/faces_founded"
+    rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
 
 if __name__ == '__main__':    
-    launch()
+    main()
 
     
