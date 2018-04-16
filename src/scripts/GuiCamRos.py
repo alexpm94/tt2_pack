@@ -15,6 +15,7 @@ from PIL import Image, ImageTk
 from std_msgs.msg import String
 import roslaunch
 
+launch_path= os.path.dirname(os.path.realpath(__file__))
 #Constants
 bridge = CvBridge()    
     
@@ -84,7 +85,7 @@ def launch():
     global launch
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
-    launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/eduardocg/catkin_ws/src/tt2_pack/src/scripts/detection.launch"])
+    launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+"/detection.launch"])
 
     launch.start()
     rospy.init_node('gui',anonymous=True)
