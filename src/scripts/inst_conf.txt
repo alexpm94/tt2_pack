@@ -1,0 +1,45 @@
+instalar sublime
+http://tipsonubuntu.com/2017/05/30/install-sublime-text-3-ubuntu-16-04-official-way/
+
+instalar ros
+
+hacer los primeros ros tutorials
+
+clonar repositorio
+git clone https://github.com/alexpm94/tt2_pack
+
+cd catkin_ws
+catkin_make
+
+agregar linea al bashrc
+subl ~/.bashrc
+source ~/catkin_ws/devel/setup.bash
+
+install usb cam
+
+sudo apt-get install ros-kinetic-usb-cam
+
+install pip
+sudo apt-get install python-pip
+
+instal numpy and scipy
+sudo apt-get install python-numpy python-scipy python-matplotlib
+
+
+install sickit-learn
+pip install -U scikit-learn
+
+install pillow
+sudo apt install python-pil
+
+install imagetk
+sudo apt-get install python-imaging-tk
+
+installing image_view
+sudo apt-get install ros-kinetic-image-view
+
+instal rospy
+sudo apt-get install python-rospy
+
+install image transport plugins
+sudo apt-get install ros-kinetic-image-transport-plugins

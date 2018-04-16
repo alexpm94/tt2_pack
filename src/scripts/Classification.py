@@ -25,7 +25,7 @@ def round_to_minus(x):
 	'''
 	If the probability>0.5, returns 1, else return 0
 	'''
-	if x>0.5:
+	if x>0.2:
 		return 1
 	else:
 		return -1
@@ -74,6 +74,6 @@ def user_recognized(Base_path,classifier):
 	return target_names[user_detected]
 
 #Path de las imagenes
-Base_path=os.getcwd().replace('src/scripts','include/s12')
-classifier='Clasificador.pkl'
-print user_recognized(Base_path,classifier)
+#Base_path=os.getcwd().replace('src/scripts','include/s12')
+#classifier='Clasificador.pkl'
+#print user_recognized(Base_path,classifier)
