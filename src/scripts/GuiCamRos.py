@@ -78,7 +78,7 @@ def launch():
     global launch
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
-    launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/eduardo/catkin_ws/src/tt2_pack/src/scripts/detection.launch"])
+    launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/eduardocg/catkin_ws/src/tt2_pack/src/scripts/detection.launch"])
 
     launch.start()
     main()
