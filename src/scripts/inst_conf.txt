@@ -43,3 +43,6 @@ sudo apt-get install python-rospy
 
 install image transport plugins
 sudo apt-get install ros-kinetic-image-transport-plugins
+
+install rospack API python
+sudo pip install -U rospkg
