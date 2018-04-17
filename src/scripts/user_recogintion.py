@@ -13,7 +13,7 @@ import time
 import math
 from numpy import *
 import os.path
-import Classification
+import tt2_pack.Classification as Classification
 
 #Constants
 path_user=rospy.get_param('path_user')
