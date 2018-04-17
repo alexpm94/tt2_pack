@@ -1,0 +1,7 @@
+#! /usr/bin/env python
+
+import tt2_pack.new_user
+
+
+if __name__ == '__main__':
+    tt2_pack.new_user.Usuario('Alex')

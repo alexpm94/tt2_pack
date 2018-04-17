@@ -24,8 +24,8 @@
   <!--node pkg="rviz" type="rviz" name="RVIZ" required="true"/-->
   <param name="haar" value="$(find tt2_pack)/include/haarcascade_frontalface_default.xml" />
   <param name="blinkhaar" value="$(find tt2_pack)/include/CustomBlinkCascade.xml" />
-  <param name="path_user" type="str" value="$(find tt2_pack)/include/s12" />
-  <param name="Clasificador" value="$(find tt2_pack)/src/scripts/Clasificador.pkl" />
+  <param name="path_user" type="str" value="$(find tt2_pack)/include/user" />
+  <param name="Clasificador" value="$(find tt2_pack)/include/Clasificador.pkl" />
 
   <node pkg="tt2_pack" type="ima_clahe.py" name="im_prepros_c"/>
   <node pkg="tt2_pack" type="user_recogintion.py" name="recognition_node"/>
