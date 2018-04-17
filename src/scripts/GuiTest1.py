@@ -18,6 +18,7 @@ from PIL import Image as ImageZ, ImageTk
 from std_msgs.msg import String
 import roslaunch
 
+
 launch_path= os.path.dirname(os.path.realpath(__file__))
 try:
     from Tkinter import *
@@ -41,7 +42,7 @@ def vp_start_gui():
     GuiTest_support.init(root, top)
     root.mainloop()
 
-w = None
+    w = None
 def create_SEGURIFACE(root, *args, **kwargs):
     '''Starting point when module is imported by another program.'''
     global w, w_win, rt
@@ -69,6 +70,7 @@ def launch():
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
     faces_topic = "/faces_founded"
     rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
+    
 
 def image_callback(data):   
     global top
@@ -92,8 +94,43 @@ def label_callback(data):
 def quit():
     global root
     global launch
-    launch.shutdown()
-    root.quit()
+    try:
+        launch.shutdown()
+    except: pass
+    finally:
+        root.quit()
+
+class MyDialog:
+    def __init__(self, parent):
+        top = self.top = Toplevel(parent)
+        self.myLabel = Label(top, text='Escribe el nombre del nuevo ususario')
+        self.myLabel.pack()
+
+        self.myEntryBox = Entry(top)
+        self.myEntryBox.pack()
+
+        self.mySubmitButton = Button(top, text='Crear Usuario', command=self.send)
+        self.mySubmitButton.pack()
+
+    def send(self):
+        global username
+        username = self.myEntryBox.get()
+        self.top.destroy()
+
+def Save():
+    inputDialog = MyDialog(root)
+    root.wait_window(inputDialog.top)
+    print('Username: ', username)
+
+def toggle_fullscreen(self, event=None):
+        root.state = not root.state  # Just toggling the boolean
+        root.attributes("-fullscreen", root.state)
+        return "break"
+
+def end_fullscreen(self, event=None):
+        root.state = False
+        root.attributes("-fullscreen", False)
+        return "break"      
 
 class SEGURIFACE:
     def __init__(self, top=None):
@@ -108,7 +145,8 @@ class SEGURIFACE:
         top.geometry("1024x600+195+67")
         top.title("SEGURIFACE")
         top.configure(highlightcolor="black")
-
+        top.bind("<F>", toggle_fullscreen)
+        top.bind("<Escape>", end_fullscreen)
 
 
         self.Frame1 = Frame(top)
@@ -123,6 +161,7 @@ class SEGURIFACE:
         self.AddUser.place(relx=0.0, rely=0.05, height=26, width=123)
         self.AddUser.configure(activebackground="#d9d9d9")
         self.AddUser.configure(text='''Agregar Usuario''')
+        self.AddUser.configure(command=Save)
 
         self.Train = Button(self.Frame1)
         self.Train.place(relx=0.15, rely=0.15, height=26, width=79)
@@ -158,7 +197,7 @@ class SEGURIFACE:
         self.Message.place(relx=0.53, rely=0.95, height=18, width=144)
         self.Message.configure(activebackground="#f9f9f9")
 
-
+    
 
 
 
