@@ -8,7 +8,7 @@ class Usuario:
 
 	def __init__(self,name):
 		self.name=name
-		self.users_csv=rospack.get_path('tt2_pack')+'/src/include/users.csv'+str(self.id_num)
+		self.users_csv=rospack.get_path('tt2_pack')+'/include/users.csv'
 		self.get_id()
 		self.append_toCSV()
 		self.create_dir()
