@@ -17,7 +17,8 @@ import os.path
 from PIL import Image as ImageZ, ImageTk
 from std_msgs.msg import String
 import roslaunch
-
+import os
+from time import sleep
 
 launch_path= os.path.dirname(os.path.realpath(__file__))
 try:
@@ -36,26 +37,14 @@ import GuiTest_support
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
-    global val, w, root, top
+    global root, top
     root = Tk()
     top = SEGURIFACE (root)
     GuiTest_support.init(root, top)
     root.mainloop()
 
     w = None
-def create_SEGURIFACE(root, *args, **kwargs):
-    '''Starting point when module is imported by another program.'''
-    global w, w_win, rt
-    rt = root
-    w = Toplevel (root)
-    top = SEGURIFACE (w)
-    GuiTest_support.init(w, top, *args, **kwargs)
-    return (w, top)
 
-def destroy_SEGURIFACE():
-    global w
-    w.destroy()
-    w = None
 
 def launch():
     global launch
@@ -102,25 +91,40 @@ def quit():
 
 class MyDialog:
     def __init__(self, parent):
-        top = self.top = Toplevel(parent)
-        self.myLabel = Label(top, text='Escribe el nombre del nuevo ususario')
+        self.top = Toplevel(parent)
+        self.myLabel = Label(self.top, text='Escribe el nombre del nuevo ususario')
         self.myLabel.pack()
 
-        self.myEntryBox = Entry(top)
+        self.myEntryBox = Entry(self.top)
         self.myEntryBox.pack()
 
-        self.mySubmitButton = Button(top, text='Crear Usuario', command=self.send)
+        self.mySubmitButton = Button(self.top, text='Crear Usuario', command=self.send)
         self.mySubmitButton.pack()
 
     def send(self):
-        global username
-        username = self.myEntryBox.get()
+        self.username = self.myEntryBox.get()
         self.top.destroy()
+
+    def getUser(self):
+        return self.username
 
 def Save():
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
-    print('Username: ', username)
+    #Create User
+    os.environ['User_name']=inputDialog.getUser()
+    launch_path= os.path.dirname(os.path.realpath(__file__))
+    uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+    roslaunch.configure_logging(uuid)
+    launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
+    launch.start()
+
+    rospy.init_node('gui',anonymous=True)
+    image_topic = "/Recuadro/compressed"
+    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
+    
+    sleep(20)
+    launch.shutdown()
 
 def toggle_fullscreen(self, event=None):
         root.state = not root.state  # Just toggling the boolean
