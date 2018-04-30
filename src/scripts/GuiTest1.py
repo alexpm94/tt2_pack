@@ -69,11 +69,30 @@ def image_callback(data):
     #cv2_img = bridge.imgmsg_to_cv2(data, "bgr8")
     image1 = np.asarray(cv2_img) # 480x640x3
     cv2image = cv2.cvtColor(image1, cv2.COLOR_BGR2RGBA)
-    img = ImageZ.fromarray(cv2image)
+    cv2imflip = cv2.flip(cv2image, 1)
+    cv2imresize = cv2.resize(cv2imflip, (732, 549)) 
+    img = ImageZ.fromarray(cv2imresize)
     imgtk = ImageTk.PhotoImage(image=img)
     top.lImage.imgtk = imgtk
     top.lImage.configure(image=imgtk)
     top.lImage.image=imgtk
+
+def image_callbackTuto(data):   
+    global top
+        #Prara usar Bolsas
+    np_arr = np.fromstring(data.data, np.uint8)
+    cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        #Para usar imagenes de camara    
+    #cv2_img = bridge.imgmsg_to_cv2(data, "bgr8")
+    image1 = np.asarray(cv2_img) # 480x640x3
+    cv2image = cv2.cvtColor(image1, cv2.COLOR_BGR2RGBA)
+    cv2imflip = cv2.flip(cv2image, 1)
+    cv2imresize = cv2.resize(cv2imflip, (230, 230)) 
+    img = ImageZ.fromarray(cv2imresize)
+    imgtk = ImageTk.PhotoImage(image=img)
+    top.ImageTut.imgtk = imgtk
+    top.ImageTut.configure(image=imgtk)
+    top.ImageTut.image=imgtk
         
 def label_callback(data):
     global top    
@@ -163,26 +182,26 @@ class SEGURIFACE:
 
 
         self.Frame1 = Frame(top)
-        self.Frame1.place(relx=0.0, rely=0.0, relheight=1.01, relwidth=0.13)
+        self.Frame1.place(relx=0.0, rely=0.0, relheight=1.01, relwidth=0.29)
         self.Frame1.configure(relief=GROOVE)
         self.Frame1.configure(borderwidth="2")
         self.Frame1.configure(relief=GROOVE)
         self.Frame1.configure(background="#296c5e")
-        self.Frame1.configure(width=135)
+        self.Frame1.configure(width=295)
 
         self.AddUser = Button(self.Frame1)
-        self.AddUser.place(relx=0.0, rely=0.05, height=26, width=123)
+        self.AddUser.place(relx=0.03, rely=0.02, height=26, width=123)
         self.AddUser.configure(activebackground="#d9d9d9")
         self.AddUser.configure(text='''Agregar Usuario''')
         self.AddUser.configure(command=Save)
 
         self.Train = Button(self.Frame1)
-        self.Train.place(relx=0.15, rely=0.15, height=26, width=79)
+        self.Train.place(relx=0.03, rely=0.08, height=26, width=79)
         self.Train.configure(activebackground="#d9d9d9")
         self.Train.configure(text='''Entrenar''')
 
         self.RecognizerB = Button(self.Frame1)
-        self.RecognizerB.place(relx=0.15, rely=0.26, height=26, width=89)
+        self.RecognizerB.place(relx=0.03, rely=0.15, height=26, width=89)
         self.RecognizerB.configure(activebackground="#d9d9d9")
         self.RecognizerB.configure(text='''Reconocer''')
         self.RecognizerB.configure(command=launch)
@@ -193,18 +212,23 @@ class SEGURIFACE:
         self.Quit.configure(text='''Salir''')
         self.Quit.configure(command=quit)
 
+        self.ImageTut = Label(self.Frame1)
+        self.ImageTut.place(relx=0.1, rely=0.45, height=230, width=230)
+        self.ImageTut.configure(background="#0029ff")
+        self.ImageTut.configure(width=296)
+
         self.Frame2 = Frame(top)
-        self.Frame2.place(relx=0.13, rely=0.0, relheight=0.91, relwidth=0.88)
+        self.Frame2.place(relx=0.29, rely=0.0, relheight=0.92, relwidth=0.71)
         self.Frame2.configure(relief=GROOVE)
         self.Frame2.configure(borderwidth="2")
         self.Frame2.configure(relief=GROOVE)
         self.Frame2.configure(background="#00d9d9")
-        self.Frame2.configure(width=905)
+        self.Frame2.configure(width=730)
 
         self.lImage = Label(self.Frame2)
-        self.lImage.place(relx=0.01, rely=0.02, height=528, width=874)
+        self.lImage.place(relx=0.0, rely=0.0, height=549, width=732)
         self.lImage.configure(activebackground="#f9f9f9")
-        self.lImage.configure(width=874)
+        
 
         self.Message = Label(top)
         self.Message.place(relx=0.53, rely=0.95, height=18, width=144)
