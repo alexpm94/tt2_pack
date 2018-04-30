@@ -37,13 +37,12 @@ import GuiTest_support
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
-    global root, top
+    global root, top, counter
+    counter=0
     root = Tk()
     top = SEGURIFACE (root)
     GuiTest_support.init(root, top)
     root.mainloop()
-
-    w = None
 
 
 def launch():
@@ -63,7 +62,7 @@ def launch():
 
 def image_callback(data):   
     global top
-        #Prara usar Bolsas
+    #Prara usar Bolsas
     np_arr = np.fromstring(data.data, np.uint8)
     cv2_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         #Para usar imagenes de camara    
@@ -108,23 +107,33 @@ class MyDialog:
     def getUser(self):
         return self.username
 
+def my_callback(event):
+    global counter, launch2,t1
+    counter+=1
+    if counter>5:
+        launch2.shutdown()
+        #Stop Timer, it doesnt work to kill the node
+        t1.shutdown()
+        counter=0
+    print 'Counter: '+str(counter)
+
 def Save():
+    global launch2,counter,t1
     inputDialog = MyDialog(root)
+    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     root.wait_window(inputDialog.top)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
     launch_path= os.path.dirname(os.path.realpath(__file__))
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
-    launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
-    launch.start()
-
-    rospy.init_node('gui',anonymous=True)
+    launch2 = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
+    launch2.start()
+    #Show image in the frame
     image_topic = "/Recuadro/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
-    
-    sleep(20)
-    launch.shutdown()
+    #Create timer object
+    t1=rospy.Timer(rospy.Duration(1), my_callback)
 
 def toggle_fullscreen(self, event=None):
         root.state = not root.state  # Just toggling the boolean
