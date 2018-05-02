@@ -129,7 +129,7 @@ class MyDialog:
 def my_callback(event):
     global counter, launch2,t1
     counter+=1
-    if counter>5:
+    if counter>10:
         launch2.shutdown()
         #Stop Timer, it doesnt work to kill the node
         t1.shutdown()
@@ -139,7 +139,6 @@ def my_callback(event):
 def Save():
     global launch2,counter,t1
     inputDialog = MyDialog(root)
-    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     root.wait_window(inputDialog.top)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
@@ -148,6 +147,7 @@ def Save():
     roslaunch.configure_logging(uuid)
     launch2 = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
     launch2.start()
+    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     #Show image in the frame
     image_topic = "/Recuadro/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
@@ -235,12 +235,5 @@ class SEGURIFACE:
         self.Message.configure(activebackground="#f9f9f9")
 
     
-
-
-
-
 if __name__ == '__main__':
     vp_start_gui()
-
-
-
