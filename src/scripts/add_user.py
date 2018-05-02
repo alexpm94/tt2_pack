@@ -39,6 +39,7 @@ def create_CI(image):
     
 def image_callback(ros_data):
     global contador
+    global counterFrame
     global cont_blink
     global pub
     global pub2
@@ -93,11 +94,12 @@ def image_callback(ros_data):
             # Print stats ----------------------------------------------------------
             #print('frame time:'+str(t)+'-------------------------------block end')
             faces_str='ROSTRO DTECTADO'
-            if contador<10:
+            if contador<31 and counterFrame%3==1:
                 user_images(path_user,contador,cl1)
-            elif contador==11:
+                contador+=1
+            elif contador>30:
                 pub4.publish(True)
-            contador+=1
+            counterFrame+=1
             # Compress image to pub ------------------------------------------------
             cropImage = create_CI(cl1)
             #pub5.publish = create_CI(roi_color)
@@ -106,7 +108,7 @@ def image_callback(ros_data):
 
         except UnboundLocalError:
             faces_str='NO HAY ROSTRO'
-            contador=0
+            #contador=0
             cont_blink=0;
             pub3.publish(faces_str)
             pub4.publish(False)
@@ -125,7 +127,8 @@ def main():
     global pub3
     global pub4
     global pub5
-    global contador
+    global contador, counterFrame
+    counterFrame=0
     contador=0
     rospy.init_node('im_prepros_c')
     image_topic = "/im_prepros/compressed"
