@@ -36,7 +36,7 @@ class Usuario:
 			writer.writerow({'first_name': self.name, 'id_number': self.id_num})
 
 	def create_dir(self):
-		self.directory=rospack.get_path('tt2_pack')+'/src/dataBase/s'+str(self.id_num)
+		self.directory=rospack.get_path('tt2_pack')+'/src/dataBase2/s'+str(self.id_num)
 		if not os.path.exists(self.directory):
 			os.makedirs(self.directory)
 
