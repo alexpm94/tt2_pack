@@ -46,10 +46,15 @@ def vp_start_gui():
 
 
 def launch():
+    global top 
     global launch
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
     launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+"/detection.launch"])
+
+    #top.ImageTut.place(relx=0.14, rely=0.42, height=240, width=220)
+    top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
+    top.Message.place(relx=0.57, rely=0.94, height=18, width=144)
 
     launch.start()
     rospy.init_node('gui',anonymous=True)
@@ -97,6 +102,18 @@ def image_callbackTuto(data):
 def label_callback(data):
     global top    
     top.Message.configure(text=data.data)
+
+def stop():
+    global launch, top
+    try:
+        launch.shutdown()
+        launch2.shutdown()
+    except:pass
+    finally:
+        top.lImage.place_forget()
+        top.ImageTut.place_forget()
+        top.Message.place_forget()
+
 
 def quit():
     global root
@@ -168,72 +185,121 @@ class SEGURIFACE:
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
+       
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85' 
         _ana2color = '#d9d9d9' # X11 color: 'gray85' 
+        font11 = "-family Ubuntu -size 15 -weight normal -slant roman "  \
+            "-underline 0 -overstrike 0"
+        font12 = "-family Ubuntu -size 13 -weight normal -slant roman "  \
+            "-underline 0 -overstrike 0"
 
-        top.geometry("1024x600+195+67")
+        top.geometry("1024x600+382+93")
         top.title("SEGURIFACE")
         top.configure(highlightcolor="black")
         top.bind("<F>", toggle_fullscreen)
         top.bind("<Escape>", end_fullscreen)
 
-
+                   
         self.Frame1 = Frame(top)
-        self.Frame1.place(relx=0.0, rely=0.0, relheight=1.01, relwidth=0.29)
+        self.Frame1.place(relx=0.0, rely=0.0, relheight=1.0, relwidth=1.0)
         self.Frame1.configure(relief=GROOVE)
         self.Frame1.configure(borderwidth="2")
         self.Frame1.configure(relief=GROOVE)
         self.Frame1.configure(background="#296c5e")
-        self.Frame1.configure(width=295)
+        self.Frame1.configure(width=1024)
+
+        self.Status = Label(self.Frame1)
+        self.Status.place(relx=0.0, rely=0.0, height=600, width=1024)
+        #self._img1 = PhotoImage(file="../../include/Fondo.png")
+        self._img1 = PhotoImage(file="../../include/Ojo.png")
+        self.Status.configure(image=self._img1)
+        self.Status.configure(justify=LEFT)
+        self.Status.configure(text='''Label''')
+        self.Status.configure(width=1024)
+        self.Status.configure(height=600)
 
         self.AddUser = Button(self.Frame1)
-        self.AddUser.place(relx=0.03, rely=0.02, height=26, width=123)
-        self.AddUser.configure(activebackground="#d9d9d9")
+        self.AddUser.place(relx=0.08, rely=0.06, height=26, width=140)
+        self.AddUser.configure(activebackground="#000000")
+        self.AddUser.configure(activeforeground="white")
+        self.AddUser.configure(background="#000036")
+        self.AddUser.configure(borderwidth="0")
+        self.AddUser.configure(font=font12)
+        self.AddUser.configure(foreground="#ffffff")
+        self.AddUser.configure(highlightthickness="0")
         self.AddUser.configure(text='''Agregar Usuario''')
+        self.AddUser.configure(width=140)
         self.AddUser.configure(command=Save)
 
         self.Train = Button(self.Frame1)
-        self.Train.place(relx=0.03, rely=0.08, height=26, width=79)
+        self.Train.place(relx=0.1, rely=0.22, height=26, width=80)
         self.Train.configure(activebackground="#d9d9d9")
+        self.Train.configure(background="#000036")
+        self.Train.configure(borderwidth="0")
+        self.Train.configure(font=font12)
+        self.Train.configure(foreground="#ffffff")
+        self.Train.configure(highlightthickness="0")
         self.Train.configure(text='''Entrenar''')
 
         self.RecognizerB = Button(self.Frame1)
-        self.RecognizerB.place(relx=0.03, rely=0.15, height=26, width=89)
+        self.RecognizerB.place(relx=0.1, rely=0.14, height=26, width=90)
         self.RecognizerB.configure(activebackground="#d9d9d9")
+        self.RecognizerB.configure(background="#000036")
+        self.RecognizerB.configure(borderwidth="0")
+        self.RecognizerB.configure(font=font12)
+        self.RecognizerB.configure(foreground="#ffffff")
+        self.RecognizerB.configure(highlightthickness="0")
         self.RecognizerB.configure(text='''Reconocer''')
         self.RecognizerB.configure(command=launch)
 
+        self.StopLaunch = Button(self.Frame1)
+        self.StopLaunch.place(relx=0.11, rely=0.3, height=26, width=74)
+        self.StopLaunch.configure(activebackground="#d9d9d9")
+        self.StopLaunch.configure(background="#000036")
+        self.StopLaunch.configure(borderwidth="0")
+        self.StopLaunch.configure(compound="center")
+        self.StopLaunch.configure(font=font12)
+        self.StopLaunch.configure(foreground="#ffffff")
+        self.StopLaunch.configure(highlightthickness="0")
+        self.StopLaunch.configure(text='''Detener''')
+        self.StopLaunch.configure(command=stop)
+
+        self.ImageTut = Label(self.Frame1)
+        self.ImageTut.place(relx=0.04, rely=0.42, height=240, width=220)
+        self.ImageTut.configure(activebackground="#f9f9f9")
+        self.ImageTut.configure(background="#ffffff")
+        self.ImageTut.configure(disabledforeground="#ffffff")
+        self._img2 = PhotoImage(file="../../include/upiita-logo.png")
+        self.ImageTut.configure(image=self._img2)
+        self.ImageTut.configure(state=ACTIVE)
+        self.ImageTut.configure(takefocus="1")
+        self.ImageTut.configure(width=220)
+        self.ImageTut.place_forget()  
+
         self.Quit = Button(self.Frame1)
-        self.Quit.place(relx=0.3, rely=0.89, height=26, width=52)
+        self.Quit.place(relx=0.11, rely=0.87, height=33, width=66)
         self.Quit.configure(activebackground="#d9d9d9")
+        self.Quit.configure(background="#d10000")
+        self.Quit.configure(compound="center")
+        self.Quit.configure(font=font11)
+        self.Quit.configure(foreground="#ffffff")
+        self.Quit.configure(highlightbackground="#0000d9")
+        self.Quit.configure(highlightthickness="0")
         self.Quit.configure(text='''Salir''')
         self.Quit.configure(command=quit)
 
-        self.ImageTut = Label(self.Frame1)
-        self.ImageTut.place(relx=0.1, rely=0.45, height=230, width=230)
-        self.ImageTut.configure(background="#0029ff")
-        self.ImageTut.configure(width=296)
-
-        self.Frame2 = Frame(top)
-        self.Frame2.place(relx=0.29, rely=0.0, relheight=0.92, relwidth=0.71)
-        self.Frame2.configure(relief=GROOVE)
-        self.Frame2.configure(borderwidth="2")
-        self.Frame2.configure(relief=GROOVE)
-        self.Frame2.configure(background="#00d9d9")
-        self.Frame2.configure(width=730)
-
-        self.lImage = Label(self.Frame2)
-        self.lImage.place(relx=0.0, rely=0.0, height=549, width=732)
+        self.lImage = Label(self.Frame1)
+        self.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
         self.lImage.configure(activebackground="#f9f9f9")
-        
+        self.lImage.place_forget()
 
-        self.Message = Label(top)
-        self.Message.place(relx=0.53, rely=0.95, height=18, width=144)
+        self.Message = Label(self.Frame1)
+        self.Message.place(relx=0.57, rely=0.94, height=18, width=144)
         self.Message.configure(activebackground="#f9f9f9")
-
+        self.Message.place_forget()
     
 
 
