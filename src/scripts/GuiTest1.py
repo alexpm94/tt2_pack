@@ -40,6 +40,7 @@ def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global root, top, counter
     counter=0
+    rospy.init_node('gui',anonymous=True)
     root = Tk()
     top = SEGURIFACE (root)
     GuiTest_support.init(root, top)
@@ -58,7 +59,6 @@ def launch():
     top.Message.place(relx=0.57, rely=0.94, height=18, width=144)
 
     launch.start()
-    rospy.init_node('gui',anonymous=True)
     
     image_topic = "/Recuadro/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
@@ -105,7 +105,7 @@ def label_callback(data):
     top.Message.configure(text=data.data)
 
 def stop():
-    global launch, top
+    global launch, top, launch2
     try:
         launch.shutdown()
         launch2.shutdown()
@@ -155,15 +155,19 @@ def my_callback(event):
     print 'Counter: '+str(counter)
 
 def complete_callback(rosdata):
-    global launch2
+    global launch2, top
     state=rosdata.data
     if state==True:
+        top.lImage.place_forget()
+        top.ImageTut.place_forget()
+        top.Message.place_forget()
         launch2.shutdown()
 
 def Save():
     global launch2,counter,t1
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
+    top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
     launch_path= os.path.dirname(os.path.realpath(__file__))
@@ -171,7 +175,7 @@ def Save():
     roslaunch.configure_logging(uuid)
     launch2 = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
     launch2.start()
-    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
+    #rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     #Show image in the frame
     image_topic = "/Recuadro/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
