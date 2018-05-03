@@ -50,6 +50,7 @@ def vp_start_gui():
 def launch():
     global top 
     global launch
+    global sub1,sub2
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
     launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+"/detection.launch"])
@@ -59,11 +60,10 @@ def launch():
     top.Message.place(relx=0.57, rely=0.94, height=18, width=144)
 
     launch.start()
-    
     image_topic = "/Recuadro/compressed"
-    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
+    sub1=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
     faces_topic = "/faces_founded"
-    rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
+    sub2=rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
     
 
 def image_callback(data):   
@@ -105,9 +105,11 @@ def label_callback(data):
     top.Message.configure(text=data.data)
 
 def stop():
-    global launch, top, launch2
+    global launch, top, launch2, sub1, sub2
     try:
         launch.shutdown()
+        sub1.unregister()
+        sub2.unregister()
         launch2.shutdown()
     except:pass
     finally:
@@ -155,16 +157,19 @@ def my_callback(event):
     print 'Counter: '+str(counter)
 
 def complete_callback(rosdata):
-    global launch2, top
+    global launch2, top, sub3, sub4
     state=rosdata.data
     if state==True:
         top.lImage.place_forget()
         top.ImageTut.place_forget()
         top.Message.place_forget()
         launch2.shutdown()
+        sub3.unregister()
+        sub4.unregister()
+        #t1.signal_shutdown('Done') 
 
 def Save():
-    global launch2,counter,t1
+    global launch2,counter,t1, sub3, sub4
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
@@ -178,8 +183,8 @@ def Save():
     #rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     #Show image in the frame
     image_topic = "/Recuadro/compressed"
-    rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
-    rospy.Subscriber("user_images",Bool,complete_callback)
+    sub3=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
+    sub4=rospy.Subscriber("user_images",Bool,complete_callback)
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
