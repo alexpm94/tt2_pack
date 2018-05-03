@@ -7,6 +7,7 @@
 import sys
 import rospy
 from sensor_msgs.msg import CompressedImage
+from std_msgs.msg import Bool
 from sensor_msgs.msg import Image as ImageMsg
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
@@ -146,17 +147,22 @@ class MyDialog:
 def my_callback(event):
     global counter, launch2,t1
     counter+=1
-    if counter>5:
+    if counter>10:
         launch2.shutdown()
         #Stop Timer, it doesnt work to kill the node
         t1.shutdown()
         counter=0
     print 'Counter: '+str(counter)
 
+def complete_callback(rosdata):
+    global launch2
+    state=rosdata.data
+    if state==True:
+        launch2.shutdown()
+
 def Save():
     global launch2,counter,t1
     inputDialog = MyDialog(root)
-    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     root.wait_window(inputDialog.top)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
@@ -165,11 +171,13 @@ def Save():
     roslaunch.configure_logging(uuid)
     launch2 = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+'/record.launch'])
     launch2.start()
+    rospy.init_node('Add_User',disable_signals=True,anonymous=True)
     #Show image in the frame
     image_topic = "/Recuadro/compressed"
     rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
+    rospy.Subscriber("user_images",Bool,complete_callback)
     #Create timer object
-    t1=rospy.Timer(rospy.Duration(1), my_callback)
+    #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
 def toggle_fullscreen(self, event=None):
         root.state = not root.state  # Just toggling the boolean
@@ -301,12 +309,5 @@ class SEGURIFACE:
         self.Message.configure(activebackground="#f9f9f9")
         self.Message.place_forget()
     
-
-
-
-
 if __name__ == '__main__':
     vp_start_gui()
-
-
-
