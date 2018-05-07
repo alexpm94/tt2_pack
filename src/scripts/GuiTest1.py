@@ -176,6 +176,7 @@ def Save():
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
+    top.ImageTut.place(relx=0.04, rely=0.42, height=240, width=220)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
     launch_path= os.path.dirname(os.path.realpath(__file__))
