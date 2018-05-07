@@ -14,5 +14,8 @@
   <param name="haar" value="$(find tt2_pack)/include/haarcascade_frontalface_default.xml" />
   <param name="blinkhaar" value="$(find tt2_pack)/include/CustomBlinkCascade.xml" />
   <param name="user_name" value="$(env User_name)" />
+  
+  <!-- NODO PARA CORRER LA BOLSA-->
+  <node pkg="rosbag" type="play" name="player" output="screen" args="-l $(find tt2_pack)/src/bags/tutorial.bag"/>
 
 </launch>
