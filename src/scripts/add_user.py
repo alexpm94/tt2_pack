@@ -55,7 +55,7 @@ def image_callback(ros_data):
     else:#La linea else se ejecuta cuanto no hay exceptions
 
         image1 = np.asarray(cv2_img) # 480x640x3
-        cv2.rectangle(image1,(180,100),(480,380),(0,0,255),4)
+        cv2.rectangle(image1,(180,100),(480,380),(245,160,28),4)
         image = image1[100:380,180:480]
         
         #cv2.imshow(image1)
