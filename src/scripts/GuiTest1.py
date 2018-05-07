@@ -95,7 +95,7 @@ def image_callbackTuto(data):
     image1 = np.asarray(cv2_img) # 480x640x3
     cv2image = cv2.cvtColor(image1, cv2.COLOR_BGR2RGBA)
     cv2imflip = cv2.flip(cv2image, 1)
-    cv2imresize = cv2.resize(cv2imflip, (230, 230)) 
+    cv2imresize = cv2.resize(cv2imflip, (240, 220)) 
     img = ImageZ.fromarray(cv2imresize)
     imgtk = ImageTk.PhotoImage(image=img)
     top.ImageTut.imgtk = imgtk
@@ -159,7 +159,7 @@ def my_callback(event):
     print 'Counter: '+str(counter)
 
 def complete_callback(rosdata):
-    global launch2, top, sub3, sub4
+    global launch2, top, sub3, sub4, sub5
     state=rosdata.data
     if state==True:
         top.lImage.place_forget()
@@ -168,10 +168,11 @@ def complete_callback(rosdata):
         launch2.shutdown()
         sub3.unregister()
         sub4.unregister()
+        sub5.unregister()
         #t1.signal_shutdown('Done') 
 
 def Save():
-    global launch2,counter,t1, sub3, sub4
+    global launch2,counter,t1, sub3, sub4, sub5
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
@@ -187,6 +188,7 @@ def Save():
     image_topic = "/Recuadro/compressed"
     sub3=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
     sub4=rospy.Subscriber("user_images",Bool,complete_callback)
+    sub5=rospy.Subscriber("tuto/compressed", CompressedImage,image_callbackTuto, queue_size=1)
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
