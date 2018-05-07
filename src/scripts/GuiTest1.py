@@ -95,7 +95,7 @@ def image_callbackTuto(data):
     image1 = np.asarray(cv2_img) # 480x640x3
     cv2image = cv2.cvtColor(image1, cv2.COLOR_BGR2RGBA)
     cv2imflip = cv2.flip(cv2image, 1)
-    cv2imresize = cv2.resize(cv2imflip, (240, 220)) 
+    cv2imresize = cv2.resize(cv2imflip, (240, 224)) 
     img = ImageZ.fromarray(cv2imresize)
     imgtk = ImageTk.PhotoImage(image=img)
     top.ImageTut.imgtk = imgtk
@@ -176,7 +176,7 @@ def Save():
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
-    top.ImageTut.place(relx=0.04, rely=0.42, height=240, width=220)
+    top.ImageTut.place(relx=0.04, rely=0.42, height=224, width=240)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
     launch_path= os.path.dirname(os.path.realpath(__file__))
@@ -189,7 +189,7 @@ def Save():
     image_topic = "/Recuadro/compressed"
     sub3=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
     sub4=rospy.Subscriber("user_images",Bool,complete_callback)
-    sub5=rospy.Subscriber("tuto/compressed", CompressedImage,image_callbackTuto, queue_size=1)
+    sub5=rospy.Subscriber("/tuto/compressed", CompressedImage,image_callbackTuto, queue_size=1)
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
@@ -293,7 +293,7 @@ class SEGURIFACE:
         self.StopLaunch.configure(command=stop)
 
         self.ImageTut = Label(self.Frame1)
-        self.ImageTut.place(relx=0.04, rely=0.42, height=240, width=220)
+        self.ImageTut.place(relx=0.04, rely=0.42, height=224, width=240)
         self.ImageTut.configure(activebackground="#f9f9f9")
         self.ImageTut.configure(background="#ffffff")
         self.ImageTut.configure(disabledforeground="#ffffff")
@@ -301,7 +301,7 @@ class SEGURIFACE:
         #self.ImageTut.configure(image=self._img2)
         self.ImageTut.configure(state=ACTIVE)
         self.ImageTut.configure(takefocus="1")
-        self.ImageTut.configure(width=220)
+        self.ImageTut.configure(width=240)
         self.ImageTut.place_forget()  
 
         self.Quit = Button(self.Frame1)
