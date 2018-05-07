@@ -22,22 +22,25 @@ path_classifier=rospy.get_param('Clasificador')
 
 def image_callback(ros_data):
     global state_current
-    global state_prev 
+    global state_prev, recognition
     state_current=ros_data.data
     if state_current^state_prev:
         if state_current:
             #print 'Imges Completed'
-            print 'Welcome Sir '+Classification.user_recognized(path_user,path_classifier)
+            name=Classification.user_recognized(path_user,path_classifier)
+            print 'Welcome Sir '+name
             publica.publish(True)
+            recognition.publish(name)
         else:
             print 'No user user detected'
             publica.publish(False)
+            recognition.publish('No user detected')
     state_prev=ros_data.data
 
 def main():
     global state_current
     global state_prev
-    global publica
+    global publica, recognition
     state_prev=True
     state_current=False
     rospy.init_node('recognition_node')
