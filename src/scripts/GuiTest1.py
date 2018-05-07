@@ -10,6 +10,8 @@ from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Bool
 from sensor_msgs.msg import Image as ImageMsg
 from cv_bridge import CvBridge, CvBridgeError
+import tt2_pack.readCSV as readCSV
+import tt2_pack.recognitionTT2 as recognition
 import cv2
 import numpy as np
 import time
@@ -188,6 +190,10 @@ def Save():
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
+def entrenar():
+    readCSV.readCSV()
+    recognition.recognition()
+
 def toggle_fullscreen(self, event=None):
         root.state = not root.state  # Just toggling the boolean
         root.attributes("-fullscreen", root.state)
@@ -260,6 +266,7 @@ class SEGURIFACE:
         self.Train.configure(foreground="#ffffff")
         self.Train.configure(highlightthickness="0")
         self.Train.configure(text='''Entrenar''')
+        self.Train.configure(command=entrenar)
 
         self.RecognizerB = Button(self.Frame1)
         self.RecognizerB.place(relx=0.1, rely=0.14, height=26, width=90)
