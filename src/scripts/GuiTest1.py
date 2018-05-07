@@ -176,7 +176,7 @@ def Save():
     inputDialog = MyDialog(root)
     root.wait_window(inputDialog.top)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
-    top.ImageTut.place(relx=0.04, rely=0.42, height=224, width=240)
+    top.ImageTut.place(relx=0.025, rely=0.42, height=224, width=240)
     #Create User
     os.environ['User_name']=inputDialog.getUser()
     launch_path= os.path.dirname(os.path.realpath(__file__))
@@ -293,7 +293,7 @@ class SEGURIFACE:
         self.StopLaunch.configure(command=stop)
 
         self.ImageTut = Label(self.Frame1)
-        self.ImageTut.place(relx=0.04, rely=0.42, height=224, width=240)
+        self.ImageTut.place(relx=0.01, rely=0.42, height=224, width=240)
         self.ImageTut.configure(activebackground="#f9f9f9")
         self.ImageTut.configure(background="#ffffff")
         self.ImageTut.configure(disabledforeground="#ffffff")
