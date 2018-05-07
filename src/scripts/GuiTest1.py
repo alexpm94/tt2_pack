@@ -64,7 +64,7 @@ def launch():
     launch.start()
     image_topic = "/Recuadro/compressed"
     sub1=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
-    faces_topic = "/faces_founded"
+    faces_topic = "/user_name"
     sub2=rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
     
 
