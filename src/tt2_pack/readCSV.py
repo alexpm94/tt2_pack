@@ -21,7 +21,7 @@ def readCSV():
 
 	BASE_PATH=rospack.get_path('tt2_pack')+'/src/dataBase2'
 	SEPARATOR=","
-	label = 0
+	label = 1
 	for dirname, dirnames, filenames in os.walk(BASE_PATH):
 	    for subdirname in dirnames:
 	        subject_path = os.path.join(dirname, subdirname)
