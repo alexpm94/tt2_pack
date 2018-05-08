@@ -59,14 +59,14 @@ def recognition():
     print "n_clases: %d" % n_classes
 
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=13)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=5)
     print X_test.shape, X_train.shape
 
     ###############################################################################
     # Compute a PCA (eigenfaces) on the face dataset (treated as unlabeled
     # dataset): unsupervised feature extraction / dimensionality reduction
 
-    n_components = 40
+    n_components = 80
 
     print "Extracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0])
     t0 = time()
@@ -139,8 +139,8 @@ def recognition():
     # plot the result of the prediction on a portion of the test set
 
     def title(y_pred, y_test, target_names, i):
-        pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
-        true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
+        pred_name = target_names[y_pred[i]-1].rsplit(' ', 1)[-1]
+        true_name = target_names[y_test[i]-1].rsplit(' ', 1)[-1]
         return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
 
     prediction_titles = [title(y_pred, y_test, target_names, i)
@@ -154,4 +154,3 @@ def recognition():
     plot_gallery(eigenfaces, eigenface_titles, h, w)
 
     pl.show()
-
