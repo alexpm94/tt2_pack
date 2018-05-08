@@ -2,6 +2,7 @@ import os.path
 import numpy as np
 import matplotlib.image as mpimg
 import pickle
+import rospkg
 
 def getFrequencyDict(sequence):
     """
@@ -25,7 +26,7 @@ def round_to_minus(x):
 	'''
 	If the probability>0.5, returns 1, else return 0
 	'''
-	if x>0.2:
+	if x>0.3:
 		return 1
 	else:
 		return -1
@@ -71,9 +72,12 @@ def user_recognized(Base_path,classifier):
 	user_detected=keywithmaxval(freq_dic)
 	if user_detected<0:
 		return 'NO USER IN THE DATA BASE'
-	return target_names[user_detected]
+	return target_names[user_detected-1]
 
-#Path de las imagenes
-#Base_path=os.getcwd().replace('src/scripts','include/s12')
-#classifier='Clasificador.pkl'
-#print user_recognized(Base_path,classifier)
+if __name__ == '__main__':
+	#Path de las imagenes
+	rospack = rospkg.RosPack()
+	# get the file path for rospy_tutorials
+	CSV_Images=rospack.get_path('tt2_pack')+'/include/user'
+	classifier=rospack.get_path('tt2_pack')+'/include/Clasificador.pkl'
+	print user_recognized(CSV_Images,classifier)
