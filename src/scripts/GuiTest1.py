@@ -21,7 +21,10 @@ from PIL import Image as ImageZ, ImageTk
 from std_msgs.msg import String
 import roslaunch
 import os
-from time import sleep
+import rospkg 
+
+rospack = rospkg.RosPack()
+Image_back=rospack.get_path('tt2_pack')+'/include/FondoFacialDetection.png'
 
 launch_path= os.path.dirname(os.path.realpath(__file__))
 try:
@@ -240,7 +243,7 @@ class SEGURIFACE:
         self.Status = Label(self.Frame1)
         self.Status.place(relx=0.0, rely=0.0, height=600, width=1024)
         #self._img1 = PhotoImage(file="../../include/Fondo.png")
-        self._img1 = PhotoImage(file="../../include/FondoFacialDetection.png")
+        self._img1 = PhotoImage(file=Image_back)
         self.Status.configure(image=self._img1)
         self.Status.configure(justify=LEFT)
         self.Status.configure(text='''Label''')

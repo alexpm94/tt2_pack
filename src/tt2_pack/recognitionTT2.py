@@ -22,7 +22,7 @@ import rospkg
 def recognition():
     rospack = rospkg.RosPack()
     # get the file path for rospy_tutorials
-    CSV_Images=rospack.get_path('tt2_pack')+'/src/dataBase/new_csv.csv'
+    CSV_Images=rospack.get_path('tt2_pack')+'/include/user_images.csv'
 
     classifier_path=rospack.get_path('tt2_pack')+'/include/Clasificador.pkl'
     #Leer el archivo csv
@@ -30,7 +30,7 @@ def recognition():
 
     #Obtener los datos a partir del csv
     #Numero de clases
-    target_names=np.array(my_data[::10,2])
+    target_names=np.array(my_data[::31,2])
     #Path de las imagenes
     Path=my_data[:,0]
 
@@ -154,3 +154,4 @@ def recognition():
     plot_gallery(eigenfaces, eigenface_titles, h, w)
 
     pl.show()
+
