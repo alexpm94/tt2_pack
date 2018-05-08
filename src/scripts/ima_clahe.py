@@ -43,6 +43,7 @@ def sensor_callback(ros_data):
 def image_callback(ros_data):
     global contador
     global cont_blink
+    global tuto
     global pub
     global pub2
     global pub3
@@ -61,6 +62,8 @@ def image_callback(ros_data):
         image1 = np.asarray(cv2_img) # 480x640x3
         cv2.rectangle(image1,(180,100),(480,380),(245,160,28),4)
         image = image1[100:380,180:480]
+        imageTuto = create_CI(image)
+        tuto.publish(imageTuto)
         
         #cv2.imshow(image1)
         #print(cv2_img)
@@ -136,6 +139,7 @@ def main():
     global pub3
     global pub4
     global pub5
+    global tuto
     global contador
     global cont_blink
     global distance
@@ -148,6 +152,7 @@ def main():
     rospy.Subscriber(image_topic_camera, CompressedImage, image_callback,queue_size=1)
     rospy.Subscriber('/sensorDistance', Int32, sensor_callback,queue_size=1)
 
+    tuto = rospy.Publisher('/tuto/compressed', CompressedImage, queue_size=1)
 
     pub = rospy.Publisher('/Clahe/compressed', CompressedImage, queue_size=1)
     pub2 = rospy.Publisher('/Recuadro/compressed', CompressedImage, queue_size=1)
