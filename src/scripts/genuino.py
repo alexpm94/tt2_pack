@@ -12,12 +12,12 @@ def blink_callback(ros_data):
 
 	state_current=ros_data.data
 
-		if state_current:
-			print 'Blink_detected'
-			blink_state=True
+	if state_current:
+		print 'Blink_detected'
+		blink_state=True
         else:
-			print 'No blink detected'
-			blink_state=False
+		print 'No blink detected'
+		blink_state=False
 
 
 def user_callback(ros_data):
