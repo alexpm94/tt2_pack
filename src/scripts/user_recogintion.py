@@ -31,10 +31,12 @@ def image_callback(ros_data):
             print 'Welcome Sir '+name
             publica.publish(True)
             recognition.publish(name)
+
         else:
             print 'No user user detected'
             publica.publish(False)
             recognition.publish('No user detected')
+            
     state_prev=ros_data.data
 
 def main():
