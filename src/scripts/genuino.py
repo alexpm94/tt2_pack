@@ -15,7 +15,7 @@ def blink_callback(ros_data):
 	if state_current:
 		print 'Blink_detected'
 		blink_state=True
-        else:
+ 	else:
 		print 'No blink detected'
 		blink_state=False
 
