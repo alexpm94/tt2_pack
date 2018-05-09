@@ -83,7 +83,7 @@ def image_callback(ros_data):
             #el valor de escala original era 1.2, con 
 
             for (x,y,w,h) in faces:
-                roi_gray = gray[y:y+h+15, x+20:x+w-20]
+                roi_gray = gray[y+30:y+h-15, x+40:x+w-40]
 
             if len(blink)==2 and len(faces)==1:
                 for (x,y,w,h) in blink:
