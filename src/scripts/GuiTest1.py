@@ -62,7 +62,7 @@ def launch():
 
     #top.ImageTut.place(relx=0.14, rely=0.42, height=240, width=220)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
-    top.Message.place(relx=0.57, rely=0.94, height=18, width=144)
+    top.Message.place(relx=0.53, rely=0.08, height=17, width=200)
 
     launch.start()
     image_topic = "/Recuadro/compressed"
@@ -325,7 +325,8 @@ class SEGURIFACE:
         self.lImage.place_forget()
 
         self.Message = Label(self.Frame1)
-        self.Message.place(relx=0.57, rely=0.94, height=18, width=144)
+        self.Message.place(relx=0.57, rely=0.25, height=30, width=200)
+        self.Message.configure(font=font11)
         self.Message.configure(activebackground="#f9f9f9")
         self.Message.place_forget()
     
