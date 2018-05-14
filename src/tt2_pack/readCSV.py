@@ -22,11 +22,17 @@ def readCSV():
 	BASE_PATH=rospack.get_path('tt2_pack')+'/src/dataBase2'
 	SEPARATOR=","
 	label = 1
+	flag=False
 	for dirname, dirnames, filenames in os.walk(BASE_PATH):
 	    for subdirname in dirnames:
 	        subject_path = os.path.join(dirname, subdirname)
 	        for filename in os.listdir(subject_path):
 	            abs_path = "%s/%s" % (subject_path, filename)
-	            file_csv.write("%s%s%d%s%s\n" % (abs_path, SEPARATOR, label, SEPARATOR, names[subdirname]))
-	        label = label + 1
+	            try:
+	            	file_csv.write("%s%s%d%s%s\n" % (abs_path, SEPARATOR, label, SEPARATOR, names[subdirname]))
+	            	flag=True
+	            except:
+	            	flag=False
+	        if flag:
+	        	label = label + 1
 	file_csv.close()
