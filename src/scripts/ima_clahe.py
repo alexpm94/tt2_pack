@@ -79,15 +79,16 @@ def image_callback(ros_data):
             maxSize=(450, 450)
             )
 
-            blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.5,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
+            blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.2,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
             #el valor de escala original era 1.2, con 
 
             for (x,y,w,h) in faces:
-                roi_gray = gray[y+30:y+h-15, x+40:x+w-40]
+                roi_gray = gray[y+20:y+h, x+30:x+w-30]
+                cv2.rectangle(image,(x+30,y+20),(x+w-30,y+h),(255,255,255),3)
 
-            if len(blink)==2 and len(faces)==1:
+            if len(blink)==2:
                 for (x,y,w,h) in blink:
-                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),3)
+                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,200,0),3)
                     cont_blink+=1
             if cont_blink>=1:
                 pub5.publish(True);
