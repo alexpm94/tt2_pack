@@ -26,7 +26,7 @@ def round_to_minus(x):
 	'''
 	If the probability>0.5, returns 1, else return 0
 	'''
-	if x>0.3:
+	if x>0.45:
 		return 1
 	else:
 		return -1
@@ -70,6 +70,8 @@ def user_recognized(Base_path,classifier):
 	# Obtener la clase mas repetida
 	freq_dic=getFrequencyDict(y_final)
 	user_detected=keywithmaxval(freq_dic)
+	print y_proba
+	print y_final
 	if user_detected<0:
 		return 'NO USER IN THE DATA BASE'
 	return target_names[user_detected-1]
