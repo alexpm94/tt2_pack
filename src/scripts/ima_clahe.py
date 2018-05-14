@@ -89,9 +89,9 @@ def image_callback(ros_data):
                 for (x,y,w,h) in blink:
                     cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),3)
                     cont_blink+=1
-                    if cont_blink==1:
-                        pub5.publish(True);
-                        #print('Blink')
+            if cont_blink>=1:
+                pub5.publish(True);
+                #print('Blink')
         
         try:
             pass
@@ -106,7 +106,7 @@ def image_callback(ros_data):
                 cl1 = clahe.apply(imF)
                 # Print stats ----------------------------------------------------------
                 #print('frame time:'+str(t)+'-------------------------------block end')
-                faces_str='ROSTRO DTECTADO'
+                faces_str='ROSTRO DETECTADO'
                 if contador<10:
                     user_images(path_user,contador,cl1)
                 elif contador==11:
