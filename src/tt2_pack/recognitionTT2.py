@@ -30,7 +30,7 @@ def recognition():
 
     #Obtener los datos a partir del csv
     #Numero de clases
-    target_names=np.array(my_data[::31,2])
+    target_names=np.array(my_data[::70,2])
     #Path de las imagenes
     Path=my_data[:,0]
 
