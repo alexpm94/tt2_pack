@@ -72,6 +72,7 @@ def user_recognized(Base_path,classifier):
 	user_detected=keywithmaxval(freq_dic)
 	print y_proba
 	print y_final
+	print target_names
 	if user_detected<0:
 		return 'NO USER IN THE DATA BASE'
 	return target_names[user_detected-1]
