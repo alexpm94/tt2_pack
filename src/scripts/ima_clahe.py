@@ -75,7 +75,7 @@ def image_callback(ros_data):
             faces = face_cascade.detectMultiScale(gray,
             scaleFactor=1.2,
             minNeighbors=5,
-            minSize=(100, 100),
+            minSize=(80, 100),
             maxSize=(450, 450)
             )
 
