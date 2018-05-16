@@ -29,7 +29,6 @@ def image_callback(ros_data):
             #print 'Imges Completed'
             name=Classification.user_recognized(path_user,path_classifier)
             print 'Welcome Sir '+name
-            recognition.publish(userDet)
             if name != 'NO USER IN THE DATA BASE':
                 userDet= 'Hola' + name
                 recognition.publish(userDet)                
