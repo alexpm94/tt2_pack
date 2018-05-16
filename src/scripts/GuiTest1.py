@@ -22,9 +22,12 @@ from std_msgs.msg import String
 import roslaunch
 import os
 import rospkg 
+import datetime
+import csv
 
 rospack = rospkg.RosPack()
 Image_back=rospack.get_path('tt2_pack')+'/include/FondoFacialDetection.png'
+stats_csv=rospack.get_path('tt2_pack')+'/include/stats.csv'
 
 launch_path= os.path.dirname(os.path.realpath(__file__))
 try:
@@ -110,8 +113,9 @@ def image_callbackTuto(data):
     top.ImageTut.image=imgtk
         
 def label_callback(data):
-    global top    
+    global top, nameGui
     top.Message.configure(text=data.data)
+    nameGui=data.data
 
 def stop():
     global launch, top, launch2, sub1, sub2
@@ -202,8 +206,35 @@ def Save():
     sub5=rospy.Subscriber("/tuto/compressed", CompressedImage,image_callbackTuto, queue_size=1)
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
-def verificar(v):
-    pass
+
+def append_toCSV(Path,Nombre,Estado,Hora):
+    with open(Path, 'a') as csvfile:
+        fieldnames = ['Nombre', 'Estado','Hora','Probabilidad']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow({'Nombre': Nombre, 'Estado': Estado, 'Hora':Hora})
+
+
+def verificar0():
+    global nameGui
+    #Correcto
+    Nombre=nameGui
+    Estado='Correcto'
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Hora)
+
+def verificar1():
+    #Incorrecto
+    Nombre=nameGui
+    Estado='Incorrecto'
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Hora)
+
+def verificar2():
+    #No registrado
+    Nombre=nameGui
+    Estado='No registrado'
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Hora)
 
 def entrenar():
     readCSV.readCSV()
@@ -322,7 +353,7 @@ class SEGURIFACE:
         self.Correcto.configure(foreground="#ffffff")
         self.Correcto.configure(highlightthickness="0")
         self.Correcto.configure(text='''Correcto''')
-        self.Correcto.configure(command=verificar(1))
+        self.Correcto.configure(command=verificar0)
         self.Correcto.place_forget()
 
         self.Incorrecto = Button(self.Frame1)
@@ -334,7 +365,7 @@ class SEGURIFACE:
         self.Incorrecto.configure(foreground="#ffffff")
         self.Incorrecto.configure(highlightthickness="0")
         self.Incorrecto.configure(text='''Incorrecto''')
-        self.Incorrecto.configure(command=verificar(0))
+        self.Incorrecto.configure(command=verificar1)
         self.Incorrecto.place_forget()
 
         self.noReconocido = Button(self.Frame1)
@@ -345,8 +376,8 @@ class SEGURIFACE:
         self.noReconocido.configure(font=font11)
         self.noReconocido.configure(foreground="#ffffff")
         self.noReconocido.configure(highlightthickness="0")
-        self.noReconocido.configure(text='''No Reconocido''')
-        self.noReconocido.configure(command=verificar(2))
+        self.noReconocido.configure(text='''No Registrado''')
+        self.noReconocido.configure(command=verificar2)
         self.noReconocido.place_forget()
 
         self.ImageTut = Label(self.Frame1)
