@@ -220,7 +220,7 @@ def verificar0():
     #Correcto
     pattern=r"Hola "
     if re.match(pattern,nameGui):
-        nameGui=re.sub(pattern,"",str)
+        nameGui=re.sub(pattern,"",nameGui)
     Nombre=nameGui
     Estado='Correcto'
     Estado2=0
@@ -232,7 +232,7 @@ def verificar1():
     #Incorrecto
     pattern=r"Hola "
     if re.match(pattern,nameGui):
-        nameGui=re.sub(pattern,"",str)
+        nameGui=re.sub(pattern,"",nameGui)
     Nombre=nameGui
     Estado='Incorrecto'
     Estado2=1
