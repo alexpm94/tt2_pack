@@ -11,7 +11,7 @@ from std_msgs.msg import Bool
 from sensor_msgs.msg import Image as ImageMsg
 from cv_bridge import CvBridge, CvBridgeError
 import tt2_pack.readCSV as readCSV
-import tt2_pack.recognitionTT2 as recognition
+import tt2_pack.recognitionLDATT2 as recognition
 import cv2
 import numpy as np
 import time
