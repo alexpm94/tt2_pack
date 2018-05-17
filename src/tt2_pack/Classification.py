@@ -26,7 +26,7 @@ def round_to_minus(x):
 	'''
 	If the probability>0.5, returns 1, else return 0
 	'''
-	if x>0.3:
+	if x>0.45:
 		return 1
 	else:
 		return -1
