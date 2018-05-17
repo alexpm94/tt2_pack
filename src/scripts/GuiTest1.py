@@ -22,9 +22,13 @@ from std_msgs.msg import String
 import roslaunch
 import os
 import rospkg 
+import datetime
+import csv
+import re
 
 rospack = rospkg.RosPack()
 Image_back=rospack.get_path('tt2_pack')+'/include/FondoFacialDetection.png'
+stats_csv=rospack.get_path('tt2_pack')+'/include/stats.csv'
 
 launch_path= os.path.dirname(os.path.realpath(__file__))
 try:
@@ -62,7 +66,13 @@ def launch():
 
     #top.ImageTut.place(relx=0.14, rely=0.42, height=240, width=220)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
-    top.Message.place(relx=0.53, rely=0.08, height=17, width=200)
+
+    top.Message.place(relx=0.48, rely=0.08, height=23, width=300)
+    top.lCorrecto.place(relx=0.03, rely=0.55, height=20, width=200)
+    top.Correcto.place(relx=0.08, rely=0.6, height=26, width=85)
+    top.Incorrecto.place(relx=0.075, rely=0.7, height=26, width=100)
+    top.noReconocido.place(relx=0.06, rely=0.8, height=26, width=140)
+
 
     launch.start()
     image_topic = "/Recuadro/compressed"
@@ -106,8 +116,9 @@ def image_callbackTuto(data):
     top.ImageTut.image=imgtk
         
 def label_callback(data):
-    global top    
+    global top, nameGui
     top.Message.configure(text=data.data)
+    nameGui=data.data
 
 def stop():
     global launch, top, launch2, sub1, sub2
@@ -121,7 +132,10 @@ def stop():
         top.lImage.place_forget()
         top.ImageTut.place_forget()
         top.Message.place_forget()
-
+        top.lCorrecto.place_forget()
+        top.Correcto.place_forget()
+        top.Incorrecto.place_forget()
+        top.noReconocido.place_forget()
 
 def quit():
     global root
@@ -196,6 +210,45 @@ def Save():
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
+def append_toCSV(Path,Nombre,Estado,Estado2,Hora):
+    with open(Path, 'a') as csvfile:
+        fieldnames = ['Nombre', 'Estado','Estado2','Hora','Probabilidad']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow({'Nombre': Nombre, 'Estado': Estado,'Estado2':Estado2, 'Hora':Hora})
+
+
+def verificar0():
+    global nameGui
+    #Correcto
+    pattern=r"Hola "
+    if re.match(pattern,nameGui):
+        nameGui=re.sub(pattern,"",nameGui)
+    Nombre=nameGui
+    Estado='Correcto'
+    Estado2=0
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+
+def verificar1():
+    global nameGui
+    #Incorrecto
+    pattern=r"Hola "
+    if re.match(pattern,nameGui):
+        nameGui=re.sub(pattern,"",nameGui)
+    Nombre=nameGui
+    Estado='Incorrecto'
+    Estado2=1
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+
+def verificar2():
+    #No registrado
+    Nombre=nameGui
+    Estado='No registrado'
+    Estado2=2
+    Hora=datetime.datetime.now()
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+
 def entrenar():
     readCSV.readCSV()
     recognition.recognition()
@@ -221,6 +274,8 @@ class SEGURIFACE:
         _ana1color = '#d9d9d9' # X11 color: 'gray85' 
         _ana2color = '#d9d9d9' # X11 color: 'gray85' 
         font11 = "-family Ubuntu -size 15 -weight normal -slant roman "  \
+            "-underline 0 -overstrike 0"
+        font10 = "-family Ubuntu -size 11 -weight normal -slant roman "  \
             "-underline 0 -overstrike 0"
         font12 = "-family Ubuntu -size 13 -weight normal -slant roman "  \
             "-underline 0 -overstrike 0"
@@ -295,6 +350,49 @@ class SEGURIFACE:
         self.StopLaunch.configure(text='''Detener''')
         self.StopLaunch.configure(command=stop)
 
+        self.lCorrecto = Label(self.Frame1)
+        self.lCorrecto.place(relx=0.03, rely=0.55, height=20, width=200)
+        self.lCorrecto.configure(font=font10)
+        self.lCorrecto.configure(activebackground="#f9f9f9")
+        self.lCorrecto.configure(text='''Reconocimiento Correcto?''')
+        self.lCorrecto.place_forget()
+
+        self.Correcto = Button(self.Frame1)
+        self.Correcto.place(relx=0.08, rely=0.6, height=26, width=85)
+        self.Correcto.configure(activebackground="#d9d9d9")
+        self.Correcto.configure(background="#007090")
+        self.Correcto.configure(borderwidth="0")
+        self.Correcto.configure(font=font11)
+        self.Correcto.configure(foreground="#ffffff")
+        self.Correcto.configure(highlightthickness="0")
+        self.Correcto.configure(text='''Correcto''')
+        self.Correcto.configure(command=verificar0)
+        self.Correcto.place_forget()
+
+        self.Incorrecto = Button(self.Frame1)
+        self.Incorrecto.place(relx=0.075, rely=0.7, height=26, width=100)
+        self.Incorrecto.configure(activebackground="#d9d9d9")
+        self.Incorrecto.configure(background="#007090")
+        self.Incorrecto.configure(borderwidth="0")
+        self.Incorrecto.configure(font=font11)
+        self.Incorrecto.configure(foreground="#ffffff")
+        self.Incorrecto.configure(highlightthickness="0")
+        self.Incorrecto.configure(text='''Incorrecto''')
+        self.Incorrecto.configure(command=verificar1)
+        self.Incorrecto.place_forget()
+
+        self.noReconocido = Button(self.Frame1)
+        self.noReconocido.place(relx=0.06, rely=0.8, height=26, width=140)
+        self.noReconocido.configure(activebackground="#d9d9d9")
+        self.noReconocido.configure(background="#007090")
+        self.noReconocido.configure(borderwidth="0")
+        self.noReconocido.configure(font=font11)
+        self.noReconocido.configure(foreground="#ffffff")
+        self.noReconocido.configure(highlightthickness="0")
+        self.noReconocido.configure(text='''No Registrado''')
+        self.noReconocido.configure(command=verificar2)
+        self.noReconocido.place_forget()
+
         self.ImageTut = Label(self.Frame1)
         self.ImageTut.place(relx=0.01, rely=0.42, height=224, width=240)
         self.ImageTut.configure(activebackground="#f9f9f9")
@@ -324,7 +422,8 @@ class SEGURIFACE:
         self.lImage.configure(activebackground="#f9f9f9")
         self.lImage.place_forget()
 
-       	self.Message = Label(self.Frame1)
+
+        self.Message = Label(self.Frame1)
         self.Message.place(relx=0.57, rely=0.25, height=30, width=200)
         self.Message.configure(font=font11)
         self.Message.configure(activebackground="#f9f9f9")

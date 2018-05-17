@@ -71,7 +71,7 @@ def image_callback(ros_data):
         blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.4,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
         #el valor de escala original era 1.2, con 
         for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+h+15, x+20:x+w-20]
+            roi_gray = gray[y+20:y+h, x+30:x+w-30]
 
         if len(blink)==2:
             for (x,y,w,h) in blink:
@@ -94,10 +94,10 @@ def image_callback(ros_data):
             # Print stats ----------------------------------------------------------
             #print('frame time:'+str(t)+'-------------------------------block end')
             faces_str='ROSTRO DTECTADO'
-            if contador<31 and counterFrame%3==1:
+            if contador<70 and counterFrame%3==1:
                 user_images(path_user,contador,cl1)
                 contador+=1
-            elif contador>30:
+            elif contador>69:
                 pub4.publish(True)
             counterFrame+=1
             # Compress image to pub ------------------------------------------------
