@@ -118,8 +118,8 @@ def recognition():
     print confusion_matrix(y_test, y_pred, labels=range(n_classes))
 
     #Guardar Variables del modelo ya entrenado
-    #with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
-     #   pickle.dump([lda,clf, X_test_lda, y_test,target_names,n_classes], f)
+    with open('Clasificador.pkl', 'w') as f:  # Python 3: open(..., 'wb')
+        pickle.dump([lda,clf, X_test_lda, y_test,target_names,n_classes], f)
 
     print y_pred.shape
     ###############################################################################
