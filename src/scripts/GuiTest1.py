@@ -11,7 +11,7 @@ from std_msgs.msg import Bool
 from sensor_msgs.msg import Image as ImageMsg
 from cv_bridge import CvBridge, CvBridgeError
 import tt2_pack.readCSV as readCSV
-import tt2_pack.recognitionTT2 as recognition
+import tt2_pack.recognitionLDATT2 as recognition
 import cv2
 import numpy as np
 import time
@@ -67,13 +67,11 @@ def launch():
 
     #top.ImageTut.place(relx=0.14, rely=0.42, height=240, width=220)
     top.lImage.place(relx=0.28, rely=-0.01, height=549, width=732)
-
     top.Message.place(relx=0.48, rely=0.08, height=23, width=300)
     top.lCorrecto.place(relx=0.03, rely=0.55, height=20, width=200)
     top.Correcto.place(relx=0.08, rely=0.6, height=26, width=85)
     top.Incorrecto.place(relx=0.075, rely=0.7, height=26, width=100)
     top.noReconocido.place(relx=0.06, rely=0.8, height=26, width=140)
-
 
     launch.start()
     image_topic = "/Recuadro/compressed"

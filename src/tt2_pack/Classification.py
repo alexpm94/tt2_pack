@@ -53,14 +53,14 @@ def user_recognized(Base_path,classifier):
 
 	#La funcion with crea una variable temporal
 	with open(classifier) as f:  # Python 3: open(..., 'rb')
-	    pca,clf, X_test_pca, y_test,target_names,n_classes = pickle.load(f)
+	    lda,clf, X_test_lda, y_test,target_names,n_classes = pickle.load(f)
 
 	#Extraccion de caracteristicas
-	X_pca = pca.transform(X)
+	X_lda = lda.transform(X)
 	# Convertir de numpy a int
-	y_pred = map(int,clf.predict(X_pca))
+	y_pred = map(int,clf.predict(X_lda))
 	# Obtener probabilidad de cada clase
-	y_proba=clf. predict_proba(X_pca)
+	y_proba=clf. predict_proba(X_lda)
 	# Probabilidad mas alta
 	y_max=[max(i) for i in y_proba]
 	# Redondear la probabilidad a -1 y 1

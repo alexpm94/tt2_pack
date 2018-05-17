@@ -34,7 +34,7 @@ def image_callback(ros_data):
             if name != 'NO USER IN THE DATA BASE':
                 userDet= 'Hola ' + name
                 average.publish(nameAvrg[1])
-                recognition.publish(userDet)                
+                recognition.publish(userDet)     
                 publica.publish(True)
             else:
                 recognition.publish('Usuario No Registrado')
@@ -45,6 +45,7 @@ def image_callback(ros_data):
             print 'No user detected'
             publica.publish(False)
             recognition.publish('Coloquese Dentro del Recuadro')
+
             
     state_prev=ros_data.data
 
