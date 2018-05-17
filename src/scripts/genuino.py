@@ -20,6 +20,7 @@ def user_callback(ros_data): #User_detected
 def blink_callback(ros_data):	#Blink_detected
 	global blink_state
 	global pub_arduino
+	global user_state
 
 	state_current=ros_data.data
 
@@ -38,9 +39,8 @@ def blink_callback(ros_data):	#Blink_detected
 		pub_arduino.publish(False)
 		ardu=False
 
-
-		print ('blink state','user_state','Arduino')
-		print ('',blink_state,'    ', user_state,'  ', ardu)
+	print ('blink state','user_state','Arduino')
+	print ('',blink_state,'    ', user_state,'  ', ardu)
 
 
 def main():
