@@ -13,13 +13,14 @@ def user_callback(ros_data): #User_detected
 
 	if estado:
 		user_state=True
-	if blink_state == False:
+	else:
 		user_state=False
 
 
 def blink_callback(ros_data):	#Blink_detected
 	global blink_state
 	global pub_arduino
+	global ardu
 
 	state_current=ros_data.data
 
@@ -34,13 +35,14 @@ def blink_callback(ros_data):	#Blink_detected
 	if user_state and blink_state:
 		pub_arduino.publish(True)
 		ardu=True
+		pub_arduino.publish(False)
 	else:
 		pub_arduino.publish(False)
 		ardu=False
 
+	print('blink state','user_state','Arduino')
+	print('',blink_state,'    ', user_state,'  ', ardu)
 
-		print ('blink state','user_state','Arduino')
-		print ('',blink_state,'    ', user_state,'  ', ardu)
 
 
 def main():
@@ -50,6 +52,8 @@ def main():
  	global user_state
 	global state_prev
 	global state_current
+	global ardu
+
 
 	blink_state=False
 	user_state=False
@@ -62,11 +66,11 @@ def main():
 
 	pub_arduino = rospy.Publisher('genuinoState', Bool, queue_size=1)
 
-    #blink_detected
+
 	rospy.spin()
 
 if __name__ == '__main__':
-
     main()
+    
 
 
