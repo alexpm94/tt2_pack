@@ -19,6 +19,7 @@ import math
 import os.path
 from PIL import Image as ImageZ, ImageTk
 from std_msgs.msg import String
+from std_msgs.msg import Float32
 import roslaunch
 import os
 import rospkg 
@@ -59,7 +60,7 @@ def vp_start_gui():
 def launch():
     global top 
     global launch
-    global sub1,sub2
+    global sub1,sub2,sub3
     uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
     roslaunch.configure_logging(uuid)
     launch = roslaunch.parent.ROSLaunchParent(uuid, [launch_path+"/detection.launch"])
@@ -79,6 +80,7 @@ def launch():
     sub1=rospy.Subscriber(image_topic, CompressedImage, image_callback,queue_size=1)
     faces_topic = "/user_name"
     sub2=rospy.Subscriber(faces_topic, String, label_callback,queue_size=1)
+    sub3=rospy.Subscriber('/average', Float32, proba_callback,queue_size=1)
     
 
 def image_callback(data):   
@@ -97,6 +99,10 @@ def image_callback(data):
     top.lImage.imgtk = imgtk
     top.lImage.configure(image=imgtk)
     top.lImage.image=imgtk
+
+def proba_callback(data):
+    global avrgGui
+    avrgGui=data.data
 
 def image_callbackTuto(data):   
     global top
@@ -210,15 +216,15 @@ def Save():
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
-def append_toCSV(Path,Nombre,Estado,Estado2,Hora):
+def append_toCSV(Path,Nombre,Estado,Estado2,Probabilidad,Hora):
     with open(Path, 'a') as csvfile:
-        fieldnames = ['Nombre', 'Estado','Estado2','Hora','Probabilidad']
+        fieldnames = ['Nombre', 'Estado','Estado2','Probabilidad','Hora']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writerow({'Nombre': Nombre, 'Estado': Estado,'Estado2':Estado2, 'Hora':Hora})
+        writer.writerow({'Nombre': Nombre, 'Estado': Estado,'Estado2':Estado2, 'Probabilidad':Probabilidad,'Hora':Hora})
 
 
 def verificar0():
-    global nameGui
+    global nameGui, avrgGui
     #Correcto
     pattern=r"Hola "
     if re.match(pattern,nameGui):
@@ -227,10 +233,11 @@ def verificar0():
     Estado='Correcto'
     Estado2=0
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+    Probabilidad=avrgGui
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Probabilidad,Hora)
 
 def verificar1():
-    global nameGui
+    global nameGui, avrgGui
     #Incorrecto
     pattern=r"Hola "
     if re.match(pattern,nameGui):
@@ -239,15 +246,18 @@ def verificar1():
     Estado='Incorrecto'
     Estado2=1
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+    Probabilidad=avrgGui
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Probabilidad,Hora)
 
 def verificar2():
+    global nameGui, avrgGui
     #No registrado
     Nombre=nameGui
     Estado='No registrado'
     Estado2=2
+    Probabilidad=avrgGui
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Probabilidad,Hora)
 
 def entrenar():
     readCSV.readCSV()

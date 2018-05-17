@@ -71,11 +71,12 @@ def user_recognized(Base_path,classifier):
 	freq_dic=getFrequencyDict(y_final)
 	user_detected=keywithmaxval(freq_dic)
 	print y_proba
+	avrg=sum(y_max)/len(y_max)
 	print y_final
 	print target_names
 	if user_detected<0:
-		return 'NO USER IN THE DATA BASE'
-	return target_names[user_detected-1]
+		return ('NO USER IN THE DATA BASE',avrg)
+	return (target_names[user_detected-1],avrg)
 
 if __name__ == '__main__':
 	#Path de las imagenes
