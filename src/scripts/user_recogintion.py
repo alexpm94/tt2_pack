@@ -23,6 +23,7 @@ path_classifier=rospy.get_param('Clasificador')
 def image_callback(ros_data):
     global state_current
     global state_prev, recognition
+    global estado
     state_current=ros_data.data
     if state_current^state_prev:
         if state_current:
@@ -32,22 +33,30 @@ def image_callback(ros_data):
             if name != 'NO USER IN THE DATA BASE':
                 userDet= 'Hola ' + name
                 recognition.publish(userDet)                
-                publica.publish(True)
+                #publica.publish(True)
+                estado=True
             else:
                 recognition.publish('Usuario No Registrado')
-                publica.publish(False)
+                #publica.publish(False)
+                estado=False
 
         else:
             print 'No user detected'
-            publica.publish(False)
+            #publica.publish(False)
+            estado=False
             recognition.publish('Coloquese dentro del Recuadro')
-            
+
+    publica.publish(estado)        
     state_prev=ros_data.data
+
 
 def main():
     global state_current
     global state_prev
     global publica, recognition
+    global estado
+
+
     state_prev=True
     state_current=False
     rospy.init_node('recognition_node')
