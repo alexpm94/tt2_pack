@@ -24,6 +24,7 @@ import os
 import rospkg 
 import datetime
 import csv
+import re
 
 rospack = rospkg.RosPack()
 Image_back=rospack.get_path('tt2_pack')+'/include/FondoFacialDetection.png'
@@ -207,34 +208,44 @@ def Save():
     #Create timer object
     #t1=rospy.Timer(rospy.Duration(1), my_callback)
 
-def append_toCSV(Path,Nombre,Estado,Hora):
+def append_toCSV(Path,Nombre,Estado,Estado2,Hora):
     with open(Path, 'a') as csvfile:
-        fieldnames = ['Nombre', 'Estado','Hora','Probabilidad']
+        fieldnames = ['Nombre', 'Estado','Estado2','Hora','Probabilidad']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writerow({'Nombre': Nombre, 'Estado': Estado, 'Hora':Hora})
+        writer.writerow({'Nombre': Nombre, 'Estado': Estado,'Estado2':Estado2, 'Hora':Hora})
 
 
 def verificar0():
     global nameGui
     #Correcto
+    pattern=r"Hola "
+    if re.match(pattern,nameGui):
+        nameGui=re.sub(pattern,"",str)
     Nombre=nameGui
     Estado='Correcto'
+    Estado2=0
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Hora)
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
 
 def verificar1():
+    global nameGui
     #Incorrecto
+    pattern=r"Hola "
+    if re.match(pattern,nameGui):
+        nameGui=re.sub(pattern,"",str)
     Nombre=nameGui
     Estado='Incorrecto'
+    Estado2=1
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Hora)
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
 
 def verificar2():
     #No registrado
     Nombre=nameGui
     Estado='No registrado'
+    Estado2=2
     Hora=datetime.datetime.now()
-    append_toCSV(stats_csv,Nombre,Estado,Hora)
+    append_toCSV(stats_csv,Nombre,Estado,Estado2,Hora)
 
 def entrenar():
     readCSV.readCSV()
