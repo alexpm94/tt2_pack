@@ -86,10 +86,12 @@ def image_callback(ros_data):
                 roi_gray = gray[y+20:y+h, x+30:x+w-30]
                 cv2.rectangle(image,(x+30,y+20),(x+w-30,y+h),(255,255,255),3)
 
-            if len(blink)==2:
-                for (x,y,w,h) in blink:
-                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,200,0),3)
-                    cont_blink+=1
+            if len(blink)==2 and len(faces)==1:
+                for (xx,yy,ww,hh) in blink:
+                    if xx>x and yy>y and (xx++ww)<(x+w) and (yy+hh)<(y+h):
+                        cv2.rectangle(image,(xx,yy),(xx+ww,yy+hh),(0,200,0),3)
+                        cont_blink+=1
+
             if cont_blink>=1:
                 pub5.publish(True);
                 #print('Blink')
