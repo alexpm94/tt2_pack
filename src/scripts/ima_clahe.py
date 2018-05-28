@@ -34,7 +34,7 @@ def create_CI(image):
     msg.format = "jpeg"
     msg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
     return msg
-    
+
 def image_callback(ros_data):
     global contador
     global cont_blink
@@ -59,25 +59,32 @@ def image_callback(ros_data):
         #print(cv2_img)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         e1 = cv2.getTickCount()
-        faces = face_cascade.detectMultiScale(gray,
-        scaleFactor=1.3,
-        minNeighbors=5,
-        minSize=(160, 160),
-        maxSize=(450, 450)
-        )
-        blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.4,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
-        #el valor de escala original era 1.2, con 
-        for (x,y,w,h) in faces:
-            roi_gray = gray[y:y+h+15, x+20:x+w-20]
+ 
+        if distance > dist_min:
 
-        if len(blink)==2:
-            for (x,y,w,h) in blink:
-                cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),3)
-                cont_blink+=1
-                if cont_blink==1:
-                    pub5.publish(True);
-                    print('Blink')
-                
+            faces = face_cascade.detectMultiScale(gray,
+            scaleFactor=1.2,
+            minNeighbors=5,
+            minSize=(80, 100),
+            maxSize=(450, 450)
+            )
+
+            blink = blink_cascade.detectMultiScale(gray,scaleFactor=1.2,minNeighbors=5,minSize=(15, 15),maxSize=(80, 80))
+            #el valor de escala original era 1.2, con 
+
+            for (x,y,w,h) in faces:
+                roi_gray = gray[y+20:y+h, x+30:x+w-30]
+                cv2.rectangle(image,(x+30,y+20),(x+w-30,y+h),(255,255,255),3)
+
+            if len(blink)==2 and len(faces)==1:
+                for (xx,yy,ww,hh) in blink:
+                    if xx>x and yy>y and (xx++ww)<(x+w) and (yy+hh)<(y+h):
+                        cv2.rectangle(image,(xx,yy),(xx+ww,yy+hh),(0,200,0),3)
+                        cont_blink+=1
+
+            if cont_blink>=1:
+                pub5.publish(True);
+                #print('Blink')
         
         try:
             pass
