@@ -25,15 +25,15 @@ def user_images(path,cont,image):
     cv2.imwrite((path+"/%d.png") % cont, image)
 
 def create_CI(image):
-	'''
-	This function creates a Compressed image object and it sets
-	its parameters, it needs as argument the name of the image.
-	'''
-	msg = CompressedImage()
-	msg.header.stamp = rospy.Time.now()
-	msg.format = "jpeg"
-	msg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
-	return msg
+    '''
+    This function creates a Compressed image object and it sets
+    its parameters, it needs as argument the name of the image.
+    '''
+    msg = CompressedImage()
+    msg.header.stamp = rospy.Time.now()
+    msg.format = "jpeg"
+    msg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
+    return msg
 
 def sensor_callback(ros_data):
     global distance
@@ -75,7 +75,7 @@ def image_callback(ros_data):
             faces = face_cascade.detectMultiScale(gray,
             scaleFactor=1.2,
             minNeighbors=5,
-            minSize=(100, 100),
+            minSize=(80, 100),
             maxSize=(450, 450)
             )
 
@@ -86,10 +86,12 @@ def image_callback(ros_data):
                 roi_gray = gray[y+20:y+h, x+30:x+w-30]
                 cv2.rectangle(image,(x+30,y+20),(x+w-30,y+h),(255,255,255),3)
 
-            if len(blink)==2:
-                for (x,y,w,h) in blink:
-                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,200,0),3)
-                    cont_blink+=1
+            if len(blink)==2 and len(faces)==1:
+                for (xx,yy,ww,hh) in blink:
+                    if xx>x and yy>y and (xx++ww)<(x+w) and (yy+hh)<(y+h):
+                        cv2.rectangle(image,(xx,yy),(xx+ww,yy+hh),(0,200,0),3)
+                        cont_blink+=1
+
             if cont_blink>=1:
                 pub5.publish(True);
                 #print('Blink')
